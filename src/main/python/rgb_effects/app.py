@@ -16,6 +16,7 @@ from rgb_effects.gui.myImage import myImage
 # Global variables
 APP_NAME = "RGB_Effects"
 ICON_NAME = "icon.png"
+EXAMPLES_DIR = "examples"
 
 class myApp(QMainWindow):
   def __init__(self, ctx):
@@ -124,13 +125,15 @@ class myApp(QMainWindow):
       sub.show()
       i += 1
   
+  '''
   def openFileNamesDialog(self):
     files, _ = QFileDialog.getOpenFileNames(self,"QFileDialog.getOpenFileNames()", "","All Files (*);;Python Files (*.py)")
     if files:
       print(files)
+  '''
 
   def openFileNameDialog(self):
-    fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)")
+    fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}","All Files (*);;Python Files (*.py)")
     if fileName:
       image = myImage(fileName)
       print('Opening ' + fileName)
