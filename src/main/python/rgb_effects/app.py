@@ -11,7 +11,7 @@ from PIL.ImageQt import ImageQt
 import sys
 
 from rgb_effects.common import utils
-from rgb_effects.gui.myImage import myImage
+from rgb_effects.gui.ImageData import ImageData
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -135,7 +135,7 @@ class myApp(QMainWindow):
   def openFileNameDialog(self):
     fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}","All Files (*);;Python Files (*.py)")
     if fileName:
-      image = myImage(fileName)
+      image = ImageData(fileName)
       print('Opening ' + fileName)
       self.createMDIImage(image)
       for cumulative in [False, True]:
