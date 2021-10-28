@@ -1,7 +1,7 @@
 from statistics import mean, stdev
 from PIL import Image
 
-class myImage:
+class ImageData:
   def __init__(self, fileName):
     self.fileName = fileName
     self.image = Image.open(fileName, 'r')
