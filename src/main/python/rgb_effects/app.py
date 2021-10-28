@@ -72,7 +72,7 @@ class myApp(QMainWindow):
 
   def createMDIImage(self, image):
     label = QLabel(self, alignment=Qt.AlignCenter)
-    pixmap = QPixmap(image.fileName)
+    pixmap = QPixmap(image.path)
     label.setPixmap(pixmap)
     sub = QMdiSubWindow()
     sub.setWidget(label)
@@ -133,16 +133,16 @@ class myApp(QMainWindow):
   '''
 
   def openFileNameDialog(self):
-    fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}","All Files (*);;Python Files (*.py)")
+    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*);;Python Files (*.py)")
     if fileName:
       image = ImageData(fileName)
       print('Opening ' + fileName)
       self.createMDIImage(image)
-      for cumulative in [False, True]:
-        self.createMDIHistogram(image, cumulative)
+      # for cumulative in [False, True]:
+      #   self.createMDIHistogram(image, cumulative)
 
   def saveFileDialog(self):
-    fileName, _ = QFileDialog.getSaveFileName(self,"QFileDialog.getSaveFileName()","","All Files (*);;Text Files (*.txt)")
+    fileName, _ = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", "", "All Files (*);;Text Files (*.txt)")
     if fileName:
       print(fileName)
 

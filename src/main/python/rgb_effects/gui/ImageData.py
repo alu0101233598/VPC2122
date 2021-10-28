@@ -1,10 +1,12 @@
 from statistics import mean, stdev
 from PIL import Image
+import os
 
 class ImageData:
-  def __init__(self, fileName):
-    self.fileName = fileName
-    self.image = Image.open(fileName, 'r')
+  def __init__(self, path):
+    self.path = path
+    self.directory, self.fileName = os.path.split(self.path)
+    self.image = Image.open(path, 'r')
     self.data = self.image.getdata()
 
     self.r = []
