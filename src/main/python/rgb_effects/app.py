@@ -34,7 +34,7 @@ class myApp(QMainWindow):
     self.setCentralWidget(self.mdi)
 
   def createActions(self):
-    self.openAction = QAction("&Open...", self)
+    self.openAction = QAction("&Open", self)
     self.openAction.triggered.connect(self.openFileNameDialog)
 
     self.saveAction = QAction("&Save", self)
