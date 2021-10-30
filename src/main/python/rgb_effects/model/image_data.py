@@ -3,10 +3,8 @@ from PIL import Image
 import os
 
 class ImageData:
-  def __init__(self, path):
-    self.path = path
-    self.directory, self.fileName = os.path.split(self.path)
-    self.image = Image.open(path, 'r')
+  def __init__(self, image):
+    self.image = image
     self.data = self.image.getdata()
 
     self.r = []
