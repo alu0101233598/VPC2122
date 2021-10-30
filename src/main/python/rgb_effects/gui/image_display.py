@@ -14,7 +14,7 @@ class ImageDisplay(QMdiSubWindow):
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
-    qimage = ImageQt(image)
+    qimage = ImageQt(self.image)
     pixmap = QPixmap.fromImage(qimage)
     label = QLabel(self, alignment=Qt.AlignCenter)
     label.setMouseTracking(True)
