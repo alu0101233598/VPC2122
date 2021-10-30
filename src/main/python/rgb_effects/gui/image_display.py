@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMdiSubWindow, QLabel
+from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
@@ -19,16 +19,20 @@ class ImageDisplay(QMdiSubWindow):
     label = QLabel(self, alignment=Qt.AlignCenter)
     label.setMouseTracking(True)
     label.setPixmap(pixmap)
-    self.setWidget(label)
+    super().setWidget(label)
     
     self.image_data = None
     worker = Worker(self.process_image)
+    worker.signals.error.connect(self.load_error)
     worker.signals.finished.connect(self.test)
     self.threadpool.start(worker)
     
   def process_image(self, **kwargs):
     self.image_data = ImageData(self.image)
 
+  def load_error(self, e):
+    QMessageBox.critical(self, "Error", f"Error loading {self.title}")
+    super().close()
+
   def test(self):
-    from PyQt5.QtWidgets import QMessageBox
     QMessageBox.about(self, "Done!", f"Done loading {self.title}!")
