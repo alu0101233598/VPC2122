@@ -3,7 +3,7 @@ import sys, os
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThreadPool
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
@@ -25,16 +25,17 @@ class MainWindow(QMainWindow):
   def __init__(self, ctx):
     super().__init__()
     self.ctx = ctx
-    self.createActions()
-    self.createMenuBar()
- 
     self.setWindowTitle(APP_NAME)
     icon_path = self.ctx.get_resource(ICON_NAME)
     self.setWindowIcon(QIcon(icon_path))
     self.setGeometry(0, 0, 400, 300)
     self.showMaximized()
+    self.createActions()
+    self.createMenuBar()
+ 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
+    self.threadpool = QThreadPool()
 
   def createActions(self):
     self.openAction = QAction("&Open", self)
@@ -76,7 +77,7 @@ class MainWindow(QMainWindow):
   def createMDIImage(self, path):
     image = Image.open(path, 'r')
     fileName = os.path.basename(path)
-    sub = ImageDisplay(image, fileName)
+    sub = ImageDisplay(image, fileName, self.threadpool)
     self.mdi.addSubWindow(sub)
     sub.show()
 

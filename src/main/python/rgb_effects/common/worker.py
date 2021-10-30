@@ -1,5 +1,5 @@
 import traceback, sys
-from PyQt5.QtCore import QObject, QRunnable, pyqtSignal
+from PyQt5.QtCore import QObject, QRunnable, pyqtSignal, pyqtSlot
 
 class WorkerSignals(QObject):
     '''
