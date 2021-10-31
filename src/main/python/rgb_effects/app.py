@@ -1,37 +1,41 @@
+import sys, os
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import *
+from PyQt5.QtGui import QPixmap, QIcon, QImage
+from PyQt5.QtCore import Qt, QThreadPool
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from PIL.ImageQt import ImageQt
-import sys
+from PIL import Image
 
 from rgb_effects.common import utils
-from rgb_effects.gui.ImageData import ImageData
+from rgb_effects.gui.image_display import ImageDisplay
+from rgb_effects.model.image_data import ImageData
 
 # Global variables
 APP_NAME = "RGB_Effects"
 ICON_NAME = "icon.png"
 EXAMPLES_DIR = "examples"
 
-class myApp(QMainWindow):
+class MainWindow(QMainWindow):
   def __init__(self, ctx):
     super().__init__()
     self.ctx = ctx
-    self.createActions()
-    self.createMenuBar()
- 
     self.setWindowTitle(APP_NAME)
     icon_path = self.ctx.get_resource(ICON_NAME)
     self.setWindowIcon(QIcon(icon_path))
     self.setGeometry(0, 0, 400, 300)
     self.showMaximized()
+    self.createActions()
+    self.createMenuBar()
+ 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
+    self.threadpool = QThreadPool()
 
   def createActions(self):
     self.openAction = QAction("&Open", self)
@@ -70,17 +74,12 @@ class myApp(QMainWindow):
     helpMenu.addAction(self.helpContentAction)
     helpMenu.addAction(self.aboutAction)
 
-  def createMDIImage(self, image):
-    label = QLabel(self, alignment=Qt.AlignCenter)
-    pixmap = QPixmap(image.path)
-    label.setPixmap(pixmap)
-    sub = QMdiSubWindow()
-    sub.setWidget(label)
-    sub.setWindowTitle(image.fileName)
+  def createMDIImage(self, path):
+    image = Image.open(path, 'r')
+    fileName = os.path.basename(path)
+    sub = ImageDisplay(image, fileName, self.threadpool)
     self.mdi.addSubWindow(sub)
     sub.show()
-
-    label.setMouseTracking(True)
 
   def createMDIHistogram(self, image, cumulative):
     planes = [image.r] if image.isBw else [image.r, image.g, image.b]
@@ -124,20 +123,12 @@ class myApp(QMainWindow):
       self.mdi.addSubWindow(sub)
       sub.show()
       i += 1
-  
-  '''
-  def openFileNamesDialog(self):
-    files, _ = QFileDialog.getOpenFileNames(self,"QFileDialog.getOpenFileNames()", "","All Files (*);;Python Files (*.py)")
-    if files:
-      print(files)
-  '''
 
   def openFileNameDialog(self):
     fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*);;Python Files (*.py)")
     if fileName:
-      image = ImageData(fileName)
       print('Opening ' + fileName)
-      self.createMDIImage(image)
+      self.createMDIImage(fileName)
       # for cumulative in [False, True]:
       #   self.createMDIHistogram(image, cumulative)
 
@@ -149,5 +140,5 @@ class myApp(QMainWindow):
 
 def run():
   appctx = ApplicationContext()
-  app = myApp(appctx)
+  app = MainWindow(appctx)
   sys.exit(appctx.app.exec_())
