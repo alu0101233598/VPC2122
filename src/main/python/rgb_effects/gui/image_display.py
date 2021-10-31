@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt
 
 from PIL.ImageQt import ImageQt
@@ -14,7 +14,8 @@ class ImageDisplay(QMdiSubWindow):
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
-    qimage = ImageQt(self.image)
+    data = self.image.tobytes("raw", "RGB")
+    qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
     pixmap = QPixmap.fromImage(qimage)
     label = QLabel(self, alignment=Qt.AlignCenter)
     label.setMouseTracking(True)
