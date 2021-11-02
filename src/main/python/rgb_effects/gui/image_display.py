@@ -15,12 +15,9 @@ class ImageDisplay(QMdiSubWindow):
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
-    data = self.image.convert("RGB").tobytes("raw", "RGB")
-    qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
-    pixmap = QPixmap.fromImage(qimage)
-    label = ImageLabel(pixmap, self, alignment=Qt.AlignCenter)
+    self.setFixedSize(self.image.width, self.image.height)
+    label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
     super().setWidget(label)
-    self.setFixedSize(pixmap.width(), pixmap.height())
     
     self.image_data = None
     worker = Worker(self.process_image)
