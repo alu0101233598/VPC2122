@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
     sub.show()
 
   def updateStatusBar(self, info):
-    x, y, r, g, b = info
+    x, y, r, g, b = info[:5]
     self.statusBar().showMessage(f"({x}, {y}) R: {r} / G: {g} / B: {b}")
 
 
