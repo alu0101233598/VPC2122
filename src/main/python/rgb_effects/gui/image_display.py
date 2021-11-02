@@ -1,25 +1,25 @@
 from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox
 from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from PIL.ImageQt import ImageQt
 
+from rgb_effects.gui.image_label import ImageLabel
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.common.worker import Worker
 
 class ImageDisplay(QMdiSubWindow):
+  mouse_moved = pyqtSignal(tuple)
+
   def __init__(self, image, title, threadpool):
     super().__init__()
     self.image = image
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
-    data = self.image.convert("RGB").tobytes("raw", "RGB")
-    qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
-    pixmap = QPixmap.fromImage(qimage)
-    label = QLabel(self, alignment=Qt.AlignCenter)
-    label.setMouseTracking(True)
-    label.setPixmap(pixmap)
+    self.setFixedSize(self.image.width, self.image.height)
+    label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
+    label.mouse_moved.connect(self.propagate_mouse_moved)
     super().setWidget(label)
     
     self.image_data = None
@@ -37,3 +37,6 @@ class ImageDisplay(QMdiSubWindow):
 
   def test(self):
     QMessageBox.about(self, "Done!", f"Done loading {self.title}!")
+
+  def propagate_mouse_moved(self, info):
+    self.mouse_moved.emit(info)
