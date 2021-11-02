@@ -32,6 +32,7 @@ class MainWindow(QMainWindow):
     self.showMaximized()
     self.createActions()
     self.createMenuBar()
+    self.setStatusBar(QStatusBar(self))
  
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
@@ -78,8 +79,14 @@ class MainWindow(QMainWindow):
     image = Image.open(path, 'r')
     fileName = os.path.basename(path)
     sub = ImageDisplay(image, fileName, self.threadpool)
+    sub.mouse_moved.connect(self.updateStatusBar)
     self.mdi.addSubWindow(sub)
     sub.show()
+
+  def updateStatusBar(self, info):
+    x, y, r, g, b = info
+    self.statusBar().showMessage(f"({x}, {y}) R: {r} / G: {g} / B: {b}")
+
 
   def createMDIHistogram(self, image, cumulative):
     planes = [image.r] if image.isBw else [image.r, image.g, image.b]
