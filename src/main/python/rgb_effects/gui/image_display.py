@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 
 from PIL.ImageQt import ImageQt
 
+from rgb_effects.gui.image_label import ImageLabel
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.common.worker import Worker
 
@@ -17,10 +18,9 @@ class ImageDisplay(QMdiSubWindow):
     data = self.image.convert("RGB").tobytes("raw", "RGB")
     qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
     pixmap = QPixmap.fromImage(qimage)
-    label = QLabel(self, alignment=Qt.AlignCenter)
-    label.setMouseTracking(True)
-    label.setPixmap(pixmap)
+    label = ImageLabel(pixmap, self, alignment=Qt.AlignCenter)
     super().setWidget(label)
+    self.setFixedSize(pixmap.width(), pixmap.height())
     
     self.image_data = None
     worker = Worker(self.process_image)
