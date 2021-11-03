@@ -85,9 +85,9 @@ class MainWindow(QMainWindow):
 
 
   def createMDIHistogram(self, image, cumulative):
-    planes = [image.r] if image.isBw else [image.r, image.g, image.b]
+    planes = [image.r] if image.isGray else [image.r, image.g, image.b]
     colors = ['black', 'red', 'green', 'blue']
-    i = 0 if image.isBw else 1
+    i = 0 if image.isGray else 1
     switchMean = {
       0: image.rBrightness,
       1: image.rBrightness,
