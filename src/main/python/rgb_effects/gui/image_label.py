@@ -23,10 +23,11 @@ class ImageLabel(QLabel):
     self.rubberBand.show()
     
   def mouseMoveEvent(self, event):
-    if self.rubberBand:
-      self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
-    rgb = self.image.getpixel((event.x(), event.y()))
-    self.mouse_moved.emit((event.x(), event.y(), *rgb))
+    if event.x() < self.image.width and event.y() < self.image.height:
+      if self.rubberBand:
+        self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
+      rgb = self.image.getpixel((event.x(), event.y()))
+      self.mouse_moved.emit((event.x(), event.y(), *rgb))
 
   def mouseReleaseEvent(self, event):
     self.rubberBand.hide()
