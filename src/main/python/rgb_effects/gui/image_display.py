@@ -4,22 +4,23 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 from PIL.ImageQt import ImageQt
 
+from rgb_effects.common.image_signals import ImageSignals
 from rgb_effects.gui.image_label import ImageLabel
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.common.worker import Worker
 
 class ImageDisplay(QMdiSubWindow):
-  mouse_moved = pyqtSignal(tuple)
-
   def __init__(self, image, title, threadpool):
     super().__init__()
+    self.signals = ImageSignals()
     self.image = image.convert("RGB")
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
     self.setFixedSize(self.image.width, self.image.height)
     label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
-    label.mouse_moved.connect(self.propagate_mouse_moved)
+    label.signals.mouse_moved.connect(self.propagate_mouse_moved)
+    label.signals.selection_done.connect(self.propagate_selection_done)
     super().setWidget(label)
     
     self.image_data = None
@@ -39,4 +40,7 @@ class ImageDisplay(QMdiSubWindow):
     QMessageBox.about(self, "Done!", f"Done loading {self.title}!")
 
   def propagate_mouse_moved(self, info):
-    self.mouse_moved.emit(info)
+    self.signals.mouse_moved.emit(info)
+
+  def propagate_selection_done(self, crop):
+    self.signals.selection_done.emit(crop)
