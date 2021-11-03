@@ -67,8 +67,6 @@ class ImageData:
       self.gBrightness += i * self.gHistogram[i]
       self.bBrightness += i * self.bHistogram[i]
 
-    print(self.rBrightness)
-
   def setHistogramStDev(self):
     self.rContrast = self.gContrast = self.bContrast = 0
 
