@@ -54,6 +54,10 @@ class MainWindow(QMainWindow):
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
+    # Images menu
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
+
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
