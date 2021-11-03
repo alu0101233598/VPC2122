@@ -52,6 +52,9 @@ class MainWindow(QMainWindow):
     self.pasteAction = QAction("&Paste", self)
     self.cutAction = QAction("C&ut", self)
 
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
+
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
 
@@ -69,7 +72,8 @@ class MainWindow(QMainWindow):
     editMenu.addAction(self.pasteAction)
     editMenu.addAction(self.cutAction)
     # Images menu
-    imageMenu = menuBar.addMenu("&Images")
+    toolsMenu = menuBar.addMenu("&Tools")
+    toolsMenu.addAction(self.histogramsAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
@@ -88,30 +92,31 @@ class MainWindow(QMainWindow):
 
 
   def createMDIHistogram(self, image, cumulative):
-    planes = [image.r] if image.isGray else [image.r, image.g, image.b]
+    data = image.image_data
+    if cumulative:
+      planes = [data.rAccHistogram] if data.isGray else [data.rAccHistogram, data.gAccHistogram, data.bAccHistogram]
+    else:
+      planes = [data.rHistogram] if data.isGray else [data.rHistogram, data.gHistogram, data.bHistogram]
     colors = ['black', 'red', 'green', 'blue']
-    i = 0 if image.isGray else 1
+    i = 0 if data.isGray else 1
     switchMean = {
-      0: image.rBrightness,
-      1: image.rBrightness,
-      2: image.bBrightness,
-      3: image.gBrightness
+      0: data.rBrightness,
+      1: data.rBrightness,
+      2: data.bBrightness,
+      3: data.gBrightness
     }
     switchRange = {
-      0: image.rRange,
-      1: image.rRange,
-      2: image.bRange,
-      3: image.gRange
+      0: data.rRange,
+      1: data.rRange,
+      2: data.bRange,
+      3: data.gRange
     }
 
     for plane in planes:
       label = QLabel(self, alignment=Qt.AlignCenter)
       fig = plt.figure(figsize=(15, 10), dpi=80)
       
-      n, bins, patches = plt.hist(tuple(plane), cumulative=cumulative, bins=256, facecolor='#2ab0ff', edgecolor='#000000', linewidth=0.1, alpha=0.7)
-      n = n.astype('int')
-      for j in range(len(patches)):
-        patches[j].set_facecolor(utils.switchColorCode[i][j])
+      plt.bar(range(len(plane)), plane, color=utils.switchColorCode[i], width = 1)
       
       mean = switchMean[i]
       plt.axvline(mean, color='k', linestyle='dashed', linewidth=1)
@@ -125,20 +130,16 @@ class MainWindow(QMainWindow):
       sub = QMdiSubWindow()
       sub.setWidget(label)
       cummuString = ' (cumulative)' if cumulative else ''
-      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.fileName}")
+      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.title}")
       self.mdi.addSubWindow(sub)
       sub.show()
       i += 1
 
   def openFileNameDialog(self):
-    path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
-    if path:
-      print('Opening ' + path)
-      image = Image.open(path, 'r')
-      fileName = os.path.basename(path)
-      self.createMDIImage(fileName, image)
-      # for cumulative in [False, True]:
-      #   self.createMDIHistogram(image, cumulative)
+    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
+    if fileName:
+      print('Opening ' + fileName)
+      self.createMDIImage(fileName)
 
   def saveFileDialog(self):
     activeSubWindow = self.mdi.activeSubWindow()
@@ -153,6 +154,13 @@ class MainWindow(QMainWindow):
       else:
         print("Nothing to save")
 
+  def histogramsDialog(self):
+    image = self.mdi.activeSubWindow()
+    if image:
+      for cumulative in [False, True]:
+        self.createMDIHistogram(image, cumulative)
+    else:
+      print("Nothing selected!")
 
 def run():
   appctx = ApplicationContext()
