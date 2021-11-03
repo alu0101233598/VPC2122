@@ -124,12 +124,10 @@ class MainWindow(QMainWindow):
       plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
       histogramImage = utils.fig2img(fig)
 
+      '''cummuString = ' (cumulative)' if cumulative else ''
+      plt.set_title(f"Histogram [{colors[i]}]{cummuString} - {image.title}")'''
       label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
-      sub = QMdiSubWindow()
-      sub.setWidget(label)
-      cummuString = ' (cumulative)' if cumulative else ''
-      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.title}")
-      self.mdi.addSubWindow(sub)
+      sub = FigureCanvasQTAgg(fig)
       sub.show()
       i += 1
 
