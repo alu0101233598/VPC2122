@@ -54,6 +54,10 @@ class MainWindow(QMainWindow):
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
+
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
+
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
@@ -92,7 +96,11 @@ class MainWindow(QMainWindow):
   def createMDIHistogram(self, image, cumulative):
     data = image.image_data
     if cumulative:
+<<<<<<< HEAD
       planes = [data.rCumHistogram] if data.isGray else [data.rCumHistogram, data.gCumHistogram, data.bCumHistogram]
+=======
+      planes = [data.rAccHistogram] if data.isGray else [data.rAccHistogram, data.gAccHistogram, data.bAccHistogram]
+>>>>>>> Funcionan los histogramas con SubWindow
     else:
       planes = [data.rHistogram] if data.isGray else [data.rHistogram, data.gHistogram, data.bHistogram]
     colors = ['black', 'red', 'green', 'blue']
@@ -114,13 +122,18 @@ class MainWindow(QMainWindow):
       label = QLabel(self, alignment=Qt.AlignCenter)
       fig = plt.figure(figsize=(15, 10), dpi=80)
       
+<<<<<<< HEAD
       plt.bar(range(len(plane)), plane, color=histogram_utils.switchColorCode[i], width = 1)
+=======
+      plt.bar(range(len(plane)), plane, color=utils.switchColorCode[i], width = 1)
+>>>>>>> Funcionan los histogramas con SubWindow
       
       mean = switchMean[i]
       plt.axvline(mean, color='k', linestyle='dashed', linewidth=1)
       min_ylim, max_ylim = plt.ylim()
       min_xlim, max_xlim = plt.xlim()
       plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
+<<<<<<< HEAD
       plt.text(max_xlim*0.8, max_ylim*0.95, ('Effective ' if cumulative else '') + 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
       #histogramImage = histogram_utils.fig2img(fig)
 
@@ -128,16 +141,34 @@ class MainWindow(QMainWindow):
       plt.set_title(f"Histogram [{colors[i]}]{cummuString} - {image.title}")'''
       #label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
       sub = FigureCanvasQTAgg(fig)
+=======
+      plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
+      histogramImage = utils.fig2img(fig)
+
+      label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
+      sub = QMdiSubWindow()
+      sub.setWidget(label)
+      cummuString = ' (cumulative)' if cumulative else ''
+      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.title}")
+      self.mdi.addSubWindow(sub)
+>>>>>>> Funcionan los histogramas con SubWindow
       sub.show()
       i += 1
 
   def openFileNameDialog(self):
+<<<<<<< HEAD
     path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
     if path:
       print('Opening ' + path)
       image = Image.open(path, 'r')
       fileName = os.path.basename(path)
       self.createMDIImage(fileName, image)
+=======
+    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
+    if fileName:
+      print('Opening ' + fileName)
+      self.createMDIImage(fileName)
+>>>>>>> Funcionan los histogramas con SubWindow
 
   def saveFileDialog(self):
     activeSubWindow = self.mdi.activeSubWindow()
@@ -166,6 +197,13 @@ class MainWindow(QMainWindow):
     if sub:
       self.createMDIImage(sub.title, sub.image)
 
+  def histogramsDialog(self):
+    image = self.mdi.activeSubWindow()
+    if image:
+      for cumulative in [False, True]:
+        self.createMDIHistogram(image, cumulative)
+    else:
+      print("Nothing selected!")
 
 def run():
   appctx = ApplicationContext()
