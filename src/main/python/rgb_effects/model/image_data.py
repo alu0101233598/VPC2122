@@ -11,7 +11,7 @@ class ImageData:
     self.g = list(self.image.getdata(band=1))
     self.b = list(self.image.getdata(band=2))
 
-    self.isBw = self.r == self.g == self.b
+    self.isGray = self.r == self.g == self.b
     self.height = self.image.height
     self.width = self.image.width
     self.size = self.height * self.width
