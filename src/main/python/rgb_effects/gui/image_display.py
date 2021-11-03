@@ -13,7 +13,7 @@ class ImageDisplay(QMdiSubWindow):
 
   def __init__(self, image, title, threadpool):
     super().__init__()
-    self.image = image
+    self.image = image.convert("RGB")
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
