@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         print("Saving " + fileName)
         activeSubWindow.image.save(fileName, format=fileFormat)
       else:
-        print("Nothing to save")
+        QMessageBox.information(self, "Help", f"Nothing to save!")
 
   def duplicateImage(self):
     sub = self.mdi.activeSubWindow()
@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
       for cumulative in [False, True]:
         self.createMDIHistogram(image, cumulative)
     else:
-      print("Nothing selected!")
+      QMessageBox.information(self, "Help", f"Nothing selected!")
 
 def run():
   appctx = ApplicationContext()
