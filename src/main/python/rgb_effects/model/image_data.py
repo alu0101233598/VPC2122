@@ -67,9 +67,7 @@ class ImageData:
       self.gBrightness += i * self.gHistogram[i]
       self.bBrightness += i * self.bHistogram[i]
 
-    self.rBrightness /= self.size
-    self.gBrightness /= self.size
-    self.bBrightness /= self.size
+    print(self.rBrightness)
 
   def setHistogramStDev(self):
     self.rContrast = self.gContrast = self.bContrast = 0
@@ -79,15 +77,15 @@ class ImageData:
       self.gContrast += self.gHistogram[i] * (i - self.gBrightness) ** 2
       self.bContrast += self.bHistogram[i] * (i - self.bBrightness) ** 2
 
-    self.rContrast = math.sqrt(self.rContrast) / self.size
-    self.gContrast = math.sqrt(self.gContrast) / self.size
-    self.bContrast = math.sqrt(self.bContrast) / self.size
+    self.rContrast = math.sqrt(self.rContrast)
+    self.gContrast = math.sqrt(self.gContrast)
+    self.bContrast = math.sqrt(self.bContrast)
 
   def setEntropy(self):
     for i in range(256):
-      rP = self.rHistogram[i] / self.size
-      gP = self.gHistogram[i] / self.size
-      bP = self.bHistogram[i] / self.size
+      rP = self.rHistogram[i]
+      gP = self.gHistogram[i]
+      bP = self.bHistogram[i]
 
       self.rEntropy += rP * math.log(rP, 2)
       self.gEntropy += gP * math.log(gP, 2)
