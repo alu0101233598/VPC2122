@@ -132,7 +132,7 @@ class MainWindow(QMainWindow):
       i += 1
 
   def openFileNameDialog(self):
-    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*);;Python Files (*.py)")
+    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
     if fileName:
       print('Opening ' + fileName)
       self.createMDIImage(fileName)
