@@ -8,7 +8,7 @@ class ImageLabel(QLabel):
   def __init__(self, image, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.image =  image
-    data = self.image.convert("RGB").tobytes("raw", "RGB")
+    data = image.tobytes("raw", "RGB")
     qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
     pixmap = QPixmap.fromImage(qimage)
     self.setMouseTracking(True)

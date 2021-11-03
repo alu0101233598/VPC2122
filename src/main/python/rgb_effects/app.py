@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, re
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtWidgets import *
@@ -140,9 +140,17 @@ class MainWindow(QMainWindow):
       #   self.createMDIHistogram(image, cumulative)
 
   def saveFileDialog(self):
-    fileName, _ = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", "", "All Files (*);;Text Files (*.txt)")
+    fileName, fileFormat = QFileDialog.getSaveFileName(self, "QFileDialog.getSaveFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "PNG (*.png)")
     if fileName:
-      print(fileName)
+      fileFormat = re.findall(r"(?<=\.)\w+", fileFormat)[0]
+      if fileName.split('.')[-1] != fileFormat:
+        fileName += "." + fileFormat
+      activeSubWindow = self.mdi.activeSubWindow()
+      if activeSubWindow:
+        print("Saving " + fileName)
+        activeSubWindow.image.save(fileName, format=fileFormat)
+      else:
+        print("Nothing to save")
 
 
 def run():
