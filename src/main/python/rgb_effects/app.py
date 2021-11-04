@@ -120,7 +120,6 @@ class MainWindow(QMainWindow):
         self.createMDIHistogram(image, cumulative)
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
-        print("Nothing to save")
 
   def duplicateImage(self):
     sub = self.mdi.activeSubWindow()
