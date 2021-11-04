@@ -75,11 +75,10 @@ class MainWindow(QMainWindow):
     helpMenu.addAction(self.helpContentAction)
     helpMenu.addAction(self.aboutAction)
 
-  def createMDIImage(self, path):
-    image = Image.open(path, 'r')
-    fileName = os.path.basename(path)
-    sub = ImageDisplay(image, fileName, self.threadpool)
-    sub.mouse_moved.connect(self.updateStatusBar)
+  def createMDIImage(self, title, image):
+    sub = ImageDisplay(image, title, self.threadpool)
+    sub.signals.mouse_moved.connect(self.updateStatusBar)
+    sub.signals.selection_done.connect(lambda crop: self.createMDIImage(title, crop))
     self.mdi.addSubWindow(sub)
     sub.show()
 
@@ -132,10 +131,12 @@ class MainWindow(QMainWindow):
       i += 1
 
   def openFileNameDialog(self):
-    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
-    if fileName:
-      print('Opening ' + fileName)
-      self.createMDIImage(fileName)
+    path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
+    if path:
+      print('Opening ' + path)
+      image = Image.open(path, 'r')
+      fileName = os.path.basename(path)
+      self.createMDIImage(fileName, image)
       # for cumulative in [False, True]:
       #   self.createMDIHistogram(image, cumulative)
 
