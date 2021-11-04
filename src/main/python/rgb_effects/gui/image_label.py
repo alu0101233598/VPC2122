@@ -38,8 +38,14 @@ class ImageLabel(QLabel):
     self.rubberBand.hide()
     if self.end:
       if self.origin.y() < self.end.y():
-        rect = (self.origin.x(), self.origin.y(), self.end.x(), self.end.y())
+        if self.origin.x() < self.end.x():
+          rect = (self.origin.x(), self.origin.y(), self.end.x(), self.end.y())
+        else:
+          rect = (self.end.x(), self.origin.y(), self.origin.x(), self.end.y())
       else:
-        rect = (self.end.x(), self.end.y(), self.origin.x(), self.origin.y())
+        if self.origin.x() < self.end.x():
+          rect = (self.origin.x(), self.end.y(), self.end.x(), self.origin.y())
+        else:
+          rect = (self.end.x(), self.end.y(), self.origin.x(), self.origin.y())
       crop = self.image.crop(box=rect)
       self.signals.selection_done.emit(crop)
