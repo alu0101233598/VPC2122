@@ -10,8 +10,8 @@ class ImageLabel(QLabel):
     self.signals = ImageSignals()
     self.image = image
     self.rubberBand = None
-    data = image.tobytes("raw", "RGB")
-    self.qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
+    data = image.tobytes("raw", "RGBA")
+    self.qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGBA8888)
     self.pixmap = QPixmap.fromImage(self.qimage)
     self.setFixedSize(self.image.width, self.image.height)
     self.setAlignment(Qt.AlignCenter)

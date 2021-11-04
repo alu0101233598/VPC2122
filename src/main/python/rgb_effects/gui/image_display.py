@@ -13,7 +13,7 @@ class ImageDisplay(QMdiSubWindow):
   def __init__(self, image, title, threadpool):
     super().__init__()
     self.signals = ImageSignals()
-    self.image = image.convert("RGB")
+    self.image = image.convert("RGBA")
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
@@ -26,13 +26,11 @@ class ImageDisplay(QMdiSubWindow):
     layout.addWidget(label)
     layout.setAlignment(Qt.AlignCenter)
     w.setLayout(layout)
-    # self.setWidget(label)
     self.setWidget(w)
     
     self.image_data = None
     worker = Worker(self.process_image)
     worker.signals.error.connect(self.load_error)
-    worker.signals.finished.connect(self.test)
     self.threadpool.start(worker)
     
   def process_image(self, **kwargs):
@@ -41,9 +39,6 @@ class ImageDisplay(QMdiSubWindow):
   def load_error(self, e):
     QMessageBox.critical(self, "Error", f"Error loading {self.title}")
     super().close()
-
-  def test(self):
-    QMessageBox.about(self, "Done!", f"Done loading {self.title}!")
 
   def propagate_mouse_moved(self, info):
     self.signals.mouse_moved.emit(info)
