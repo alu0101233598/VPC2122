@@ -54,10 +54,6 @@ class MainWindow(QMainWindow):
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
-
-    self.histogramsAction = QAction("&Histograms", self)
-    self.histogramsAction.triggered.connect(self.histogramsDialog)
-
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
@@ -112,14 +108,6 @@ class MainWindow(QMainWindow):
         activeSubWindow.image.save(fileName, format=fileFormat)
       else:
         QMessageBox.information(self, "Help", f"Nothing to save!")
-
-  def histogramsDialog(self):
-    image = self.mdi.activeSubWindow()
-    if image:
-      for cumulative in [False, True]:
-        self.createMDIHistogram(image, cumulative)
-    else:
-      QMessageBox.information(self, "Help", f"Nothing selected!")
 
   def duplicateImage(self):
     sub = self.mdi.activeSubWindow()
