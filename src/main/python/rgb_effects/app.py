@@ -2,7 +2,7 @@ import sys, os, re
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QPixmap, QIcon, QImage
+from PyQt5.QtGui import QPixmap, QIcon, QImage, QKeySequence
 from PyQt5.QtCore import Qt, QThreadPool
 
 import matplotlib.pyplot as plt
@@ -39,19 +39,18 @@ class MainWindow(QMainWindow):
     self.threadpool = QThreadPool()
 
   def createActions(self):
+    # File menu
     self.openAction = QAction("&Open", self)
     self.openAction.triggered.connect(self.openFileNameDialog)
-
     self.saveAction = QAction("&Save", self)
     self.saveAction.triggered.connect(self.saveFileDialog)
-
     self.exitAction = QAction("&Exit", self)
     self.exitAction.triggered.connect(qApp.quit)
-
-    self.copyAction = QAction("&Copy", self)
-    self.pasteAction = QAction("&Paste", self)
-    self.cutAction = QAction("C&ut", self)
-
+    # Edit menu
+    self.duplicateAction = QAction("&Duplicate", self)
+    self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
+    self.duplicateAction.triggered.connect(self.duplicateImage)
+    # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
 
@@ -65,11 +64,9 @@ class MainWindow(QMainWindow):
     fileMenu.addAction(self.exitAction)
     # Edit menu
     editMenu = menuBar.addMenu("&Edit")
-    editMenu.addAction(self.copyAction)
-    editMenu.addAction(self.pasteAction)
-    editMenu.addAction(self.cutAction)
+    editMenu.addAction(self.duplicateAction)
     # Images menu
-    imageMenu = menuBar.addMenu("&Images")
+    imageMenu = menuBar.addMenu("&Operation")
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
@@ -152,6 +149,11 @@ class MainWindow(QMainWindow):
         activeSubWindow.image.save(fileName, format=fileFormat)
       else:
         print("Nothing to save")
+
+  def duplicateImage(self):
+    sub = self.mdi.activeSubWindow()
+    if sub:
+      self.createMDIImage(sub.title, sub.image)
 
 
 def run():
