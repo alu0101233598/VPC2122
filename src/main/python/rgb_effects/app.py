@@ -132,10 +132,12 @@ class MainWindow(QMainWindow):
       i += 1
 
   def openFileNameDialog(self):
-    fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
-    if fileName:
-      print('Opening ' + fileName)
-      self.createMDIImage(fileName)
+    path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
+    if path:
+      print('Opening ' + path)
+      image = Image.open(path, 'r')
+      fileName = os.path.basename(path)
+      self.createMDIImage(fileName, image)
 
   def saveFileDialog(self):
     activeSubWindow = self.mdi.activeSubWindow()
