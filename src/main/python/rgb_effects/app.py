@@ -5,15 +5,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QIcon, QImage, QKeySequence
 from PyQt5.QtCore import Qt, QThreadPool
 
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from PIL.ImageQt import ImageQt
 from PIL import Image
 
-from rgb_effects.common import utils
 from rgb_effects.gui.image_display import ImageDisplay
+from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.model.image_data import ImageData
 
 # Global variables
@@ -37,6 +36,7 @@ class MainWindow(QMainWindow):
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
     self.threadpool = QThreadPool()
+    self.histogramDisplays = []
 
   def createActions(self):
     # File menu
@@ -46,6 +46,10 @@ class MainWindow(QMainWindow):
     self.saveAction.triggered.connect(self.saveFileDialog)
     self.exitAction = QAction("&Exit", self)
     self.exitAction.triggered.connect(qApp.quit)
+
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
+
     # Edit menu
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
@@ -64,6 +68,7 @@ class MainWindow(QMainWindow):
     fileMenu.addAction(self.exitAction)
     # Edit menu
     editMenu = menuBar.addMenu("&Edit")
+    editMenu.addAction(self.histogramsAction)
     editMenu.addAction(self.duplicateAction)
     # Images menu
     imageMenu = menuBar.addMenu("&Operation")
@@ -83,50 +88,6 @@ class MainWindow(QMainWindow):
     x, y, r, g, b = info[:5]
     self.statusBar().showMessage(f"({x}, {y}) R: {r} / G: {g} / B: {b}")
 
-
-  def createMDIHistogram(self, image, cumulative):
-    planes = [image.r] if image.isBw else [image.r, image.g, image.b]
-    colors = ['black', 'red', 'green', 'blue']
-    i = 0 if image.isBw else 1
-    switchMean = {
-      0: image.rBrightness,
-      1: image.rBrightness,
-      2: image.bBrightness,
-      3: image.gBrightness
-    }
-    switchRange = {
-      0: image.rRange,
-      1: image.rRange,
-      2: image.bRange,
-      3: image.gRange
-    }
-
-    for plane in planes:
-      label = QLabel(self, alignment=Qt.AlignCenter)
-      fig = plt.figure(figsize=(15, 10), dpi=80)
-      
-      n, bins, patches = plt.hist(tuple(plane), cumulative=cumulative, bins=256, facecolor='#2ab0ff', edgecolor='#000000', linewidth=0.1, alpha=0.7)
-      n = n.astype('int')
-      for j in range(len(patches)):
-        patches[j].set_facecolor(utils.switchColorCode[i][j])
-      
-      mean = switchMean[i]
-      plt.axvline(mean, color='k', linestyle='dashed', linewidth=1)
-      min_ylim, max_ylim = plt.ylim()
-      min_xlim, max_xlim = plt.xlim()
-      plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
-      plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
-      histogramImage = utils.fig2img(fig)
-
-      label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
-      sub = QMdiSubWindow()
-      sub.setWidget(label)
-      cummuString = ' (cumulative)' if cumulative else ''
-      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.fileName}")
-      self.mdi.addSubWindow(sub)
-      sub.show()
-      i += 1
-
   def openFileNameDialog(self):
     path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
     if path:
@@ -134,8 +95,6 @@ class MainWindow(QMainWindow):
       image = Image.open(path, 'r')
       fileName = os.path.basename(path)
       self.createMDIImage(fileName, image)
-      # for cumulative in [False, True]:
-      #   self.createMDIHistogram(image, cumulative)
 
   def saveFileDialog(self):
     activeSubWindow = self.mdi.activeSubWindow()
@@ -148,13 +107,22 @@ class MainWindow(QMainWindow):
         print("Saving " + fileName)
         activeSubWindow.image.save(fileName, format=fileFormat)
       else:
-        print("Nothing to save")
+        QMessageBox.information(self, "Help", f"Nothing to save!")
 
   def duplicateImage(self):
     sub = self.mdi.activeSubWindow()
     if sub:
       self.createMDIImage(sub.title, sub.image)
 
+  def histogramsDialog(self):
+    image = self.mdi.activeSubWindow()
+    if image:
+      histograms = []
+      for cumulative in [False, True]:
+        histograms += createHistogram(self, image, cumulative)
+      self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+    else:
+      QMessageBox.information(self, "Help", f"Nothing selected!")
 
 def run():
   appctx = ApplicationContext()
