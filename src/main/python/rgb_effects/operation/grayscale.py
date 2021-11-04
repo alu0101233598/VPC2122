@@ -9,7 +9,7 @@ grayscaleLUT = [
   [b * 0.071 for b in range(256)],
 ]
 
-def grayscale_conversion(image_data):
+def PAL_conversion(image_data):
   grayscale_data = image_data
   if image_data.isGray:
     return grayscale_data.image
