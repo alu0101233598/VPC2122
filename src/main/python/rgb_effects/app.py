@@ -14,6 +14,7 @@ from PIL import Image
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.model.image_data import ImageData
+from rgb_effects.operation.grayscale import grayscale_conversion
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -51,12 +52,14 @@ class MainWindow(QMainWindow):
     self.histogramsAction.triggered.connect(self.histogramsDialog)
 
     # Edit menu
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
     # Images menu
-    self.histogramsAction = QAction("&Histograms", self)
-    self.histogramsAction.triggered.connect(self.histogramsDialog)
+    self.grayscaleAction = QAction("&Grayscale conversion")
+    self.grayscaleAction.triggered.connect(lambda: grayscale_conversion(self.mdi.activeSubWindow().image_data))
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
@@ -76,6 +79,7 @@ class MainWindow(QMainWindow):
     editMenu.addAction(self.duplicateAction)
     # Images menu
     imageMenu = menuBar.addMenu("&Operation")
+    imageMenu.addAction(self.grayscaleAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
