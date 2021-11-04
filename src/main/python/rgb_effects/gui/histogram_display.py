@@ -11,8 +11,12 @@ class HistogramDisplay(QMainWindow):
     self.title = title
     self.setWindowTitle(self.title + " Histograms")
 
+    colors = ['Gray'] if len(self.histograms) == 2 else ['Red', 'Green', 'Blue']
+    i = 0
     for histogram in self.histograms:
-      self.tabs.addTab(FigureCanvasQTAgg(histogram), self.title)
+      tag = colors[i % len(colors)] + (" Cumulative" if int(i / len(colors)) == 1 else "")
+      self.tabs.addTab(FigureCanvasQTAgg(histogram), tag)
+      i += 1 if i < len(self.histograms) else - i
 
     self.setCentralWidget(self.tabs)
     self.show()
