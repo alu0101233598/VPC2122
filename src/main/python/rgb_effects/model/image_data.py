@@ -107,3 +107,11 @@ class ImageData:
     self.rEntropy *= -1
     self.gEntropy *= -1
     self.bEntropy *= -1
+
+def dataToImage(image_data):
+  images = []
+  for band in image_data:
+    image = Image.new("L", (image_data.width, image_data.height))
+    image.putdata(band)
+    images.append(image)
+  return Image.merge("RGB", images)
