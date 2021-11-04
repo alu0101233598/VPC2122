@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox
+from PyQt5.QtWidgets import QMdiSubWindow, QLabel, QMessageBox, QVBoxLayout, QWidget
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt, pyqtSignal
 
@@ -17,11 +17,17 @@ class ImageDisplay(QMdiSubWindow):
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
-    self.setFixedSize(self.image.width, self.image.height)
+    
     label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
     label.signals.mouse_moved.connect(self.propagate_mouse_moved)
     label.signals.selection_done.connect(self.propagate_selection_done)
-    super().setWidget(label)
+    layout = QVBoxLayout()
+    w = QWidget()
+    layout.addWidget(label)
+    layout.setAlignment(Qt.AlignCenter)
+    w.setLayout(layout)
+    # self.setWidget(label)
+    self.setWidget(w)
     
     self.image_data = None
     worker = Worker(self.process_image)

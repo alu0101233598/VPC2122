@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QLabel, QWidget, QRubberBand
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtCore import pyqtSignal, QRect, QSize
+from PyQt5.QtCore import pyqtSignal, QRect, QSize, Qt
 from PIL import Image
 
 from rgb_effects.common.image_signals import ImageSignals
@@ -11,8 +11,10 @@ class ImageLabel(QLabel):
     self.image =  image
     self.rubberBand = None
     data = image.tobytes("raw", "RGB")
-    qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
-    pixmap = QPixmap.fromImage(qimage)
+    self.qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
+    pixmap = QPixmap.fromImage(self.qimage)
+    self.setFixedSize(self.image.width, self.image.height)
+    self.setAlignment(Qt.AlignCenter)
     self.setMouseTracking(True)
     self.setPixmap(pixmap)
 
@@ -25,7 +27,7 @@ class ImageLabel(QLabel):
     self.rubberBand.show()
     
   def mouseMoveEvent(self, event):
-    if event.x() < self.image.width and event.y() < self.image.height:
+    if self.qimage.valid(event.pos()):
       if self.rubberBand:
         self.end = event.pos()
         self.rubberBand.setGeometry(QRect(self.origin, self.end).normalized())
@@ -35,5 +37,10 @@ class ImageLabel(QLabel):
   def mouseReleaseEvent(self, event):
     self.rubberBand.hide()
     if self.end:
-      crop = self.image.crop(box=(self.origin.x(), self.origin.y(), self.end.x(), self.end.y()))
+      if self.origin.y() < self.end.y():
+        rect = (self.origin.x(), self.origin.y(), self.end.x(), self.end.y())
+      else:
+        rect = (self.end.x(), self.end.y(), self.origin.x(), self.origin.y())
+      crop = self.image.crop(box=rect)
+      crop.show()
       self.signals.selection_done.emit(crop)
