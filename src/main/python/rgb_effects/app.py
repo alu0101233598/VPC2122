@@ -122,11 +122,11 @@ class MainWindow(QMainWindow):
       min_xlim, max_xlim = plt.xlim()
       plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
       plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
-      histogramImage = utils.fig2img(fig)
+      #histogramImage = utils.fig2img(fig)
 
       '''cummuString = ' (cumulative)' if cumulative else ''
       plt.set_title(f"Histogram [{colors[i]}]{cummuString} - {image.title}")'''
-      label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
+      #label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
       sub = FigureCanvasQTAgg(fig)
       sub.show()
       i += 1
