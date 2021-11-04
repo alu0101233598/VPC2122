@@ -14,6 +14,7 @@ from PIL import Image
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.model.image_data import ImageData
+from rgb_effects.operation import grayscale
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -51,9 +52,15 @@ class MainWindow(QMainWindow):
     self.histogramsAction.triggered.connect(self.histogramsDialog)
 
     # Edit menu
+    self.histogramsAction = QAction("&Histograms", self)
+    self.histogramsAction.triggered.connect(self.histogramsDialog)
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
+    # Images menu
+    self.grayscaleAction = QAction("&Grayscale conversion")
+    self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.PAL_conversion))
+
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
     self.aboutAction = QAction("&About", self)
@@ -72,6 +79,7 @@ class MainWindow(QMainWindow):
     editMenu.addAction(self.duplicateAction)
     # Images menu
     imageMenu = menuBar.addMenu("&Operation")
+    imageMenu.addAction(self.grayscaleAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
@@ -123,6 +131,16 @@ class MainWindow(QMainWindow):
       self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
+
+  def applyOperation(self, op_callback):
+    if not op_callback:
+      raise "Operation callback not defined!"
+    sub = self.mdi.activeSubWindow()
+    if sub:
+      result_image = op_callback(sub.image_data)
+      self.createMDIImage(sub.title, result_image)
+    else:
+      QMessageBox.information(self, "Help", "No picture selected!")
 
 def run():
   appctx = ApplicationContext()
