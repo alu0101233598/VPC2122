@@ -5,16 +5,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QIcon, QImage, QKeySequence
 from PyQt5.QtCore import Qt, QThreadPool
 
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from PIL.ImageQt import ImageQt
 from PIL import Image
 
-from rgb_effects.model import histogram_utils
 from rgb_effects.gui.image_display import ImageDisplay
-from rgb_effects.gui.histogram_display import HistogramDisplay
+from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.model.image_data import ImageData
 
 # Global variables
@@ -94,48 +92,6 @@ class MainWindow(QMainWindow):
     x, y, r, g, b = info[:5]
     self.statusBar().showMessage(f"({x}, {y}) R: {r} / G: {g} / B: {b}")
 
-
-  def createHistogram(self, image, cumulative):
-    data = image.image_data
-    if cumulative:
-      planes = [data.rCumHistogram] if data.isGray else [data.rCumHistogram, data.gCumHistogram, data.bCumHistogram]
-    else:
-      planes = [data.rHistogram] if data.isGray else [data.rHistogram, data.gHistogram, data.bHistogram]
-    colors = ['black', 'red', 'green', 'blue']
-    i = 0 if data.isGray else 1
-    switchMean = {
-      0: data.rBrightness,
-      1: data.rBrightness,
-      2: data.bBrightness,
-      3: data.gBrightness
-    }
-    switchRange = {
-      0: data.rRange,
-      1: data.rRange,
-      2: data.bRange,
-      3: data.gRange
-    }
-
-    histograms = []
-
-    for plane in planes:
-      label = QLabel(self, alignment=Qt.AlignCenter)
-      fig = plt.figure(figsize=(15, 10), dpi=80)
-      
-      plt.bar(range(len(plane)), plane, color=histogram_utils.switchColorCode[i], width = 1)
-      
-      mean = switchMean[i]
-      plt.axvline(mean, color='k', linestyle='dashed', linewidth=1)
-      min_ylim, max_ylim = plt.ylim()
-      min_xlim, max_xlim = plt.xlim()
-      plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
-      plt.text(max_xlim*0.8, max_ylim*0.95, ('Effective ' if cumulative else '') + 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
-
-      histograms.append(fig)
-      i += 1
-    
-    return histograms
-
   def openFileNameDialog(self):
     path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
     if path:
@@ -176,7 +132,7 @@ class MainWindow(QMainWindow):
     if image:
       histograms = []
       for cumulative in [False, True]:
-        histograms += self.createHistogram(image, cumulative)
+        histograms += createHistogram(self, image, cumulative)
       self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
