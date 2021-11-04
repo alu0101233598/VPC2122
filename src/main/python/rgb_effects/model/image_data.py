@@ -2,7 +2,6 @@ from statistics import mean, stdev
 from PIL import Image
 import os
 import math
-
 class ImageData:
   def __init__(self, image):
     self.image = image
@@ -20,6 +19,22 @@ class ImageData:
     self.setCumHistogram()
     self.setHistogramMean()
     self.setHistogramStDev()
+
+  def __len__(self):
+    return len(self.r)
+
+  def __iter__(self):
+    yield self.r
+    if not self.isGray:
+      yield self.g
+      yield self.b
+
+  def __getitem__(self, index):
+    values = {0: self.r, 1: self.g, 2: self.b}
+    if index not in values:
+      raise "Tried to access undefined band"
+    else:
+      return values[index]
 
   def setHistogramAndRange(self):
     self.rHistogram = [0] * 256
