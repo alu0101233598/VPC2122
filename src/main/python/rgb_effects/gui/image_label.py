@@ -8,15 +8,15 @@ class ImageLabel(QLabel):
   def __init__(self, image, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.signals = ImageSignals()
-    self.image =  image
+    self.image = image
     self.rubberBand = None
     data = image.tobytes("raw", "RGB")
     self.qimage = QImage(data, self.image.size[0], self.image.size[1], QImage.Format_RGB888)
-    pixmap = QPixmap.fromImage(self.qimage)
+    self.pixmap = QPixmap.fromImage(self.qimage)
     self.setFixedSize(self.image.width, self.image.height)
     self.setAlignment(Qt.AlignCenter)
     self.setMouseTracking(True)
-    self.setPixmap(pixmap)
+    self.setPixmap(self.pixmap)
 
   def mousePressEvent(self, event):
     self.origin = event.pos()
@@ -42,5 +42,4 @@ class ImageLabel(QLabel):
       else:
         rect = (self.end.x(), self.end.y(), self.origin.x(), self.origin.y())
       crop = self.image.crop(box=rect)
-      crop.show()
       self.signals.selection_done.emit(crop)
