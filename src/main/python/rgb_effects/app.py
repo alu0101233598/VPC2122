@@ -14,6 +14,7 @@ from PIL import Image
 
 from rgb_effects.model import histogram_utils
 from rgb_effects.gui.image_display import ImageDisplay
+from rgb_effects.gui.histogram_display import HistogramDisplay
 from rgb_effects.model.image_data import ImageData
 
 # Global variables
@@ -37,6 +38,7 @@ class MainWindow(QMainWindow):
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
     self.threadpool = QThreadPool()
+    self.histogramDisplays = []
 
   def createActions(self):
     # File menu
@@ -93,7 +95,7 @@ class MainWindow(QMainWindow):
     self.statusBar().showMessage(f"({x}, {y}) R: {r} / G: {g} / B: {b}")
 
 
-  def createMDIHistogram(self, image, cumulative):
+  def createHistogram(self, image, cumulative):
     data = image.image_data
     if cumulative:
       planes = [data.rCumHistogram] if data.isGray else [data.rCumHistogram, data.gCumHistogram, data.bCumHistogram]
@@ -114,6 +116,8 @@ class MainWindow(QMainWindow):
       3: data.gRange
     }
 
+    histograms = []
+
     for plane in planes:
       label = QLabel(self, alignment=Qt.AlignCenter)
       fig = plt.figure(figsize=(15, 10), dpi=80)
@@ -125,17 +129,12 @@ class MainWindow(QMainWindow):
       min_ylim, max_ylim = plt.ylim()
       min_xlim, max_xlim = plt.xlim()
       plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
-      plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
-      histogramImage = utils.fig2img(fig)
+      plt.text(max_xlim*0.8, max_ylim*0.95, ('Effective ' if cumulative else '') + 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
 
-      label.setPixmap(QPixmap.fromImage(ImageQt(histogramImage)))
-      sub = QMdiSubWindow()
-      sub.setWidget(label)
-      cummuString = ' (cumulative)' if cumulative else ''
-      sub.setWindowTitle(f"Histogram [{colors[i]}]{cummuString} - {image.title}")
-      self.mdi.addSubWindow(sub)
-      sub.show()
+      histograms.append(fig)
       i += 1
+    
+    return histograms
 
   def openFileNameDialog(self):
     path, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", f"{self.ctx.get_resource(EXAMPLES_DIR)}", "All Files (*)")
@@ -175,8 +174,10 @@ class MainWindow(QMainWindow):
   def histogramsDialog(self):
     image = self.mdi.activeSubWindow()
     if image:
+      histograms = []
       for cumulative in [False, True]:
-        self.createMDIHistogram(image, cumulative)
+        histograms += self.createHistogram(image, cumulative)
+      self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
 
