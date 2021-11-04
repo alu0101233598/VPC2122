@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 from PIL.ImageQt import ImageQt
 from PIL import Image
 
-from rgb_effects.common import utils
+from rgb_effects.model import histogram_utils
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.model.image_data import ImageData
 
@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
   def createMDIHistogram(self, image, cumulative):
     data = image.image_data
     if cumulative:
-      planes = [data.rAccHistogram] if data.isGray else [data.rAccHistogram, data.gAccHistogram, data.bAccHistogram]
+      planes = [data.rCumHistogram] if data.isGray else [data.rCumHistogram, data.gCumHistogram, data.bCumHistogram]
     else:
       planes = [data.rHistogram] if data.isGray else [data.rHistogram, data.gHistogram, data.bHistogram]
     colors = ['black', 'red', 'green', 'blue']
@@ -116,15 +116,15 @@ class MainWindow(QMainWindow):
       label = QLabel(self, alignment=Qt.AlignCenter)
       fig = plt.figure(figsize=(15, 10), dpi=80)
       
-      plt.bar(range(len(plane)), plane, color=utils.switchColorCode[i], width = 1)
+      plt.bar(range(len(plane)), plane, color=histogram_utils.switchColorCode[i], width = 1)
       
       mean = switchMean[i]
       plt.axvline(mean, color='k', linestyle='dashed', linewidth=1)
       min_ylim, max_ylim = plt.ylim()
       min_xlim, max_xlim = plt.xlim()
       plt.text(mean*1.1, max_ylim*0.9, 'Mean: {:.2f}'.format(mean), fontsize=20)
-      plt.text(max_xlim*0.8, max_ylim*0.95, 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
-      #histogramImage = utils.fig2img(fig)
+      plt.text(max_xlim*0.8, max_ylim*0.95, ('Effective ' if cumulative else '') + 'Range: {0}'.format(list(switchRange[i])), fontsize=15)
+      #histogramImage = histogram_utils.fig2img(fig)
 
       '''cummuString = ' (cumulative)' if cumulative else ''
       plt.set_title(f"Histogram [{colors[i]}]{cummuString} - {image.title}")'''

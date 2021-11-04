@@ -17,7 +17,7 @@ class ImageData:
     self.size = self.height * self.width
 
     self.setHistogramAndRange()
-    self.setAccHistogram()
+    self.setCumHistogram()
     self.setHistogramMean()
     self.setHistogramStDev()
 
@@ -49,15 +49,15 @@ class ImageData:
     if x > minMax[1]:
       minMax[1] = x
 
-  def setAccHistogram(self):
-    self.rAccHistogram = [0] * 256
-    self.gAccHistogram = [0] * 256
-    self.bAccHistogram = [0] * 256
+  def setCumHistogram(self):
+    self.rCumHistogram = [0] * 256
+    self.gCumHistogram = [0] * 256
+    self.bCumHistogram = [0] * 256
 
     for i in range(256):
-      self.rAccHistogram[i] = self.rAccHistogram[i - 1] + self.rHistogram[i]
-      self.gAccHistogram[i] = self.gAccHistogram[i - 1] + self.gHistogram[i]
-      self.bAccHistogram[i] = self.bAccHistogram[i - 1] + self.bHistogram[i]
+      self.rCumHistogram[i] = self.rCumHistogram[i - 1] + self.rHistogram[i]
+      self.gCumHistogram[i] = self.gCumHistogram[i - 1] + self.gHistogram[i]
+      self.bCumHistogram[i] = self.bCumHistogram[i - 1] + self.bHistogram[i]
 
   def setHistogramMean(self):
     self.rBrightness = self.gBrightness = self.bBrightness = 0
