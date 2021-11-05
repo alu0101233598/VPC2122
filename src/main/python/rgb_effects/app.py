@@ -43,15 +43,15 @@ class MainWindow(QMainWindow):
     # File menu
     self.openAction = QAction("&Open", self)
     self.openAction.triggered.connect(self.openFileNameDialog)
+    self.openAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_O))
     self.saveAction = QAction("&Save", self)
     self.saveAction.triggered.connect(self.saveFileDialog)
+    self.saveAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_S))
     self.exitAction = QAction("&Exit", self)
     self.exitAction.triggered.connect(qApp.quit)
-
-    self.histogramsAction = QAction("&Histograms", self)
-    self.histogramsAction.triggered.connect(self.histogramsDialog)
-
     # Edit menu
+    self.informationAction = QAction("&Image information")
+    # self.informationAction.triggered.connect()
     self.histogramsAction = QAction("&Histograms", self)
     self.histogramsAction.triggered.connect(self.histogramsDialog)
     self.duplicateAction = QAction("&Duplicate", self)
@@ -60,6 +60,21 @@ class MainWindow(QMainWindow):
     # Images menu
     self.grayscaleAction = QAction("&Grayscale conversion")
     self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.PAL_conversion))
+    self.grayscaleAction.setShortcut(QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_G))
+    self.linearTransformAction = QAction("Segmented &linear transformation")
+    # self.linearTransformAction.triggered.connect()
+    self.brightnessContrastAction = QAction("&Brightness / Contrast")
+    # self.brightnessContrastAction.triggered.connect()
+    self.histogramEqAction = QAction("Histogram &equalization")
+    # self.histogramEqAction.triggered.connect()
+    self.histogramSpecAction = QAction("Histogram &specification")
+    # self.histogramSpecAction.triggered.connect()
+    self.gammaAction = QAction("Ga&mma correction")
+    # self.gammaAction.triggered.connect()
+    self.imageDiferenceAction = QAction("Image &diference")
+    # self.imageDiferenceAction.triggered.connect()
+    self.changesAction = QAction("&Changes")
+    # self.changesAction.triggered.connect()
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
@@ -75,11 +90,22 @@ class MainWindow(QMainWindow):
     fileMenu.addAction(self.exitAction)
     # Edit menu
     editMenu = menuBar.addMenu("&Edit")
+    editMenu.addAction(self.informationAction)
     editMenu.addAction(self.histogramsAction)
+    editMenu.addSeparator()
     editMenu.addAction(self.duplicateAction)
     # Images menu
     imageMenu = menuBar.addMenu("&Operation")
+    imageMenu.addSeparator()
     imageMenu.addAction(self.grayscaleAction)
+    imageMenu.addAction(self.linearTransformAction)
+    imageMenu.addAction(self.brightnessContrastAction)
+    imageMenu.addSeparator()
+    imageMenu.addAction(self.histogramEqAction)
+    imageMenu.addAction(self.histogramSpecAction)
+    imageMenu.addAction(self.gammaAction)
+    imageMenu.addAction(self.imageDiferenceAction)
+    imageMenu.addAction(self.changesAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
