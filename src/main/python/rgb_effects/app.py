@@ -34,6 +34,9 @@ class MainWindow(QMainWindow):
     self.createActions()
     self.createMenuBar()
     self.setStatusBar(QStatusBar(self))
+    self.progressBar = QProgressBar()
+    self.statusBar().addPermanentWidget(self.progressBar)
+    # self.progressBar.hide()
  
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
@@ -118,6 +121,7 @@ class MainWindow(QMainWindow):
     sub = ImageDisplay(image, title, self.threadpool)
     sub.signals.mouse_moved.connect(self.updateStatusBar)
     sub.signals.selection_done.connect(lambda crop: self.createMDIImage(title, crop))
+    sub.signals.progress.connect(self.manageProgressBar)
     self.mdi.addSubWindow(sub)
     sub.show()
 
@@ -177,6 +181,9 @@ class MainWindow(QMainWindow):
       self.createMDIImage(sub.title, result_image)
     else:
       QMessageBox.information(self, "Help", "No picture selected!")
+
+  def manageProgressBar(self, progress):
+    self.progressBar.setValue(progress)
 
 def run():
   appctx = ApplicationContext()

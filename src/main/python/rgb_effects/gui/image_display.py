@@ -31,10 +31,11 @@ class ImageDisplay(QMdiSubWindow):
     self.image_data = None
     worker = Worker(self.process_image)
     worker.signals.error.connect(self.load_error)
+    worker.signals.progress.connect(self.propagate_progress)
     self.threadpool.start(worker)
     
   def process_image(self, **kwargs):
-    self.image_data = ImageData(self.image)
+    self.image_data = ImageData(self.image, **kwargs)
 
   def load_error(self, e):
     QMessageBox.critical(self, "Error", f"Error loading {self.title}")
@@ -45,3 +46,6 @@ class ImageDisplay(QMdiSubWindow):
 
   def propagate_selection_done(self, crop):
     self.signals.selection_done.emit(crop)
+
+  def propagate_progress(self, progress):
+    self.signals.progress.emit(progress)
