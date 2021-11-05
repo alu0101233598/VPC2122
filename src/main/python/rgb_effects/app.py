@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
     self.duplicateAction.triggered.connect(self.duplicateImage)
     # Images menu
     self.grayscaleAction = QAction("&Grayscale conversion")
-    self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.PAL_conversion))
+    self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.NTSC_conversion))
     self.grayscaleAction.setShortcut(QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_G))
     self.linearTransformAction = QAction("Segmented &linear transformation")
     # self.linearTransformAction.triggered.connect()

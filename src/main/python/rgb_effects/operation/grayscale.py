@@ -4,12 +4,12 @@ from math import floor
 from rgb_effects.model import image_data as id
 
 grayscaleLUT = [
-  [r * 0.222 for r in range(256)],
-  [g * 0.707 for g in range(256)],
-  [b * 0.071 for b in range(256)],
+  [r * 0.299 for r in range(256)],
+  [g * 0.587 for g in range(256)],
+  [b * 0.114 for b in range(256)],
 ]
 
-def PAL_conversion(image_data):
+def NTSC_conversion(image_data):
   grayscale_data = image_data
   if image_data.isGray:
     return grayscale_data.image
