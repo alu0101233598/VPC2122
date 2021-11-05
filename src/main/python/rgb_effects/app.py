@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
     # self.informationAction.triggered.connect()
     self.histogramsAction = QAction("&Histograms", self)
     self.histogramsAction.triggered.connect(self.histogramsDialog)
+    self.histogramsAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_H))
     self.duplicateAction = QAction("&Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_D))
     self.duplicateAction.triggered.connect(self.duplicateImage)
