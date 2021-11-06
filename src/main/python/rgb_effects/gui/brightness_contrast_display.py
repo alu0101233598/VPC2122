@@ -93,5 +93,8 @@ class BrightnessContrastDisplay(QDialog):
     self.setLayout(layout)
 
   def accept_and_finish(self):
-    self.signals.done.emit((1, 2))
+    self.signals.done.emit((
+      tuple(map(lambda x: x.value(), self.brightness_sliders)),
+      tuple(map(lambda x: x.value(), self.contrast_sliders))
+    ))
     self.accept()
