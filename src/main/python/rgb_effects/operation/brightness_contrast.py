@@ -4,10 +4,10 @@ def apply_transformation(image_data, user_values):
   # Calculate parameters
   a_slope = []
   b_offset = []
-  for n, brightness in enumerate(image_data.brightnessIter()):
-    a_slope.append(user_values[0][n] / brightness)
   for n, contrast in enumerate(image_data.contrastIter()):
-    b_offset.append(user_values[1][n] - a_slope[n] * contrast)
+    a_slope.append(user_values[1][n] / contrast)
+  for n, brightness in enumerate(image_data.brightnessIter()):
+    b_offset.append(user_values[0][n] - a_slope[n] * brightness)
   
   # Calculate LUT
   LUT = []
