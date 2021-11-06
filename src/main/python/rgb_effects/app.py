@@ -185,9 +185,16 @@ class MainWindow(QMainWindow):
   def applyOperationDialog(self, dialog_class, op_callback):
     if not dialog_class:
       raise "Dialog is missing!"
-    dialog = dialog_class()
-    dialog.signals.done.connect(lambda x: self.applyOperation(op_callback))
-    dialog.exec()
+    sub = self.mdi.activeSubWindow()
+    if sub:
+      if sub.image_data:
+        dialog = dialog_class(sub)
+        dialog.signals.done.connect(lambda x: self.applyOperation(op_callback))
+        dialog.exec()
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
+    else:
+      QMessageBox.information(self, "Help", "No picture selected!")
 
   def applyOperation(self, op_callback):
     if not op_callback:
