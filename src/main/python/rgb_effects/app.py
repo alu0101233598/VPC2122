@@ -164,12 +164,15 @@ class MainWindow(QMainWindow):
   def histogramsDialog(self):
     image = self.mdi.activeSubWindow()
     if image:
-      histograms = []
-      for cumulative in [False, True]:
-        histograms += createHistogram(self, image, cumulative)
-      self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+      if image.image_data:
+        histograms = []
+        for cumulative in [False, True]:
+          histograms += createHistogram(self, image, cumulative)
+        self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
     else:
-      QMessageBox.information(self, "Help", f"Nothing selected!")
+      QMessageBox.information(self, "Help", f"No picture selected!")
 
   def informationDialog(self):
     imageSubWin = self.mdi.activeSubWindow()
@@ -183,8 +186,11 @@ class MainWindow(QMainWindow):
       raise "Operation callback not defined!"
     sub = self.mdi.activeSubWindow()
     if sub:
-      result_image = op_callback(sub.image_data)
-      self.createMDIImage(sub.title, result_image)
+      if sub.image_data:
+        result_image = op_callback(sub.image_data)
+        self.createMDIImage(sub.title, result_image)
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
     else:
       QMessageBox.information(self, "Help", "No picture selected!")
 
