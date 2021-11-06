@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from rgb_effects.model import image_data as id
 
 def apply_transformation(image_data, user_values):
@@ -11,15 +13,17 @@ def apply_transformation(image_data, user_values):
   
   # Calculate LUT
   LUT = []
-  for i in range(256):
-    current_value = int(round(a_slope[n] * i + b_offset[n]))
-    if current_value > 255:
-      current_value = 255
-    LUT.append(current_value)
+  for n in range(len(a_slope)):
+    LUT.append([])
+    for i in range(256):
+      current_value = int(round(a_slope[n] * i + b_offset[n]))
+      if current_value > 255:
+        current_value = 255
+      LUT[n].append(current_value)
 
   # Apply transforamtion
-  converted_image = image_data
+  converted_image = deepcopy(image_data)
   for pixel in range(len(converted_image)):
     for n, band in enumerate(converted_image):
-      converted_image[n][pixel] = LUT[band[pixel]]
+      band[pixel] = LUT[n][band[pixel]]
   return id.dataToImage(converted_image)
