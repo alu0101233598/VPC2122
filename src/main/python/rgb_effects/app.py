@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
     self.linearTransformAction = QAction("Segmented &linear transformation")
     # self.linearTransformAction.triggered.connect()
     self.brightnessContrastAction = QAction("&Brightness / Contrast")
-    # self.brightnessContrastAction.triggered.connect()
+    self.brightnessContrastAction.triggered.connect(lambda: self.applyOperationDialog(BrightnessContrastDisplay, grayscale.NTSC_conversion))
     self.histogramEqAction = QAction("Histogram &equalization")
     # self.histogramEqAction.triggered.connect()
     self.histogramSpecAction = QAction("Histogram &specification")
@@ -181,6 +181,13 @@ class MainWindow(QMainWindow):
       self.informationDisplays.append(InformationDisplay(imageSubWin))
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
+
+  def applyOperationDialog(self, dialog_class, op_callback):
+    if not dialog_class:
+      raise "Dialog is missing!"
+    dialog = dialog_class()
+    dialog.signals.done.connect(lambda x: self.applyOperation(op_callback))
+    dialog.exec()
 
   def applyOperation(self, op_callback):
     if not op_callback:
