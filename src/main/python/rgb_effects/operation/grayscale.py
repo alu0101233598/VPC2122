@@ -1,5 +1,6 @@
 from PIL import Image
 from math import floor
+from copy import deepcopy
 
 from rgb_effects.model import image_data as id
 
@@ -10,7 +11,7 @@ grayscaleLUT = [
 ]
 
 def NTSC_conversion(image_data):
-  grayscale_data = image_data
+  grayscale_data = deepcopy(image_data)
   if image_data.isGray:
     return grayscale_data.image
   for pixel in range(len(grayscale_data)):

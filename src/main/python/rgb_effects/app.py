@@ -14,8 +14,9 @@ from PIL import Image
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.gui.information_display import InformationDisplay
+from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale
+from rgb_effects.operation import grayscale, brightness_contrast
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -73,7 +74,7 @@ class MainWindow(QMainWindow):
     self.linearTransformAction = QAction("Segmented &linear transformation")
     # self.linearTransformAction.triggered.connect()
     self.brightnessContrastAction = QAction("&Brightness / Contrast")
-    # self.brightnessContrastAction.triggered.connect()
+    self.brightnessContrastAction.triggered.connect(lambda: self.applyOperationDialog(BrightnessContrastDisplay, brightness_contrast.apply_transformation))
     self.histogramEqAction = QAction("Histogram &equalization")
     # self.histogramEqAction.triggered.connect()
     self.histogramSpecAction = QAction("Histogram &specification")
@@ -181,13 +182,30 @@ class MainWindow(QMainWindow):
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
 
-  def applyOperation(self, op_callback):
+  def applyOperationDialog(self, dialog_class, op_callback):
+    if not dialog_class:
+      raise "Dialog is missing!"
+    sub = self.mdi.activeSubWindow()
+    if sub:
+      if sub.image_data:
+        dialog = dialog_class(sub)
+        dialog.signals.done.connect(lambda x: self.applyOperation(op_callback, x))
+        dialog.exec()
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
+    else:
+      QMessageBox.information(self, "Help", "No picture selected!")
+
+  def applyOperation(self, op_callback, param = None):
     if not op_callback:
       raise "Operation callback not defined!"
     sub = self.mdi.activeSubWindow()
     if sub:
       if sub.image_data:
-        result_image = op_callback(sub.image_data)
+        if param:
+          result_image = op_callback(sub.image_data, param)
+        else:
+          result_image = op_callback(sub.image_data)
         self.createMDIImage(sub.title, result_image)
       else:
         QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
