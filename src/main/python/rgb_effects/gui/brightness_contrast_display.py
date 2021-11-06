@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QLabel, QSlider, QSpinBox
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QLabel, QSlider, QSpinBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from rgb_effects.common.display_signals import DisplaySignals
@@ -15,6 +15,7 @@ class BrightnessContrastDisplay(QDialog):
 
     # Dialog initialization
     self.signals = DisplaySignals()
+    self.window = window
     qbtn = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
     buttonBox = QDialogButtonBox(qbtn)
     buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.accept_and_finish)
@@ -93,6 +94,12 @@ class BrightnessContrastDisplay(QDialog):
     self.setLayout(layout)
 
   def accept_and_finish(self):
+    for contrast in self.window.image_data.contrastIter():
+      if contrast == 0:
+        # Can't allow it, otherwise it would divide by zero (A = contrast' / contrast)
+        QMessageBox.critical(self, "Operation failed", "The picture has a band with 0 contrast. The operation was halted.")
+        self.reject()
+        return
     self.signals.done.emit((
       tuple(map(lambda x: x.value(), self.brightness_sliders)),
       tuple(map(lambda x: x.value(), self.contrast_sliders))
