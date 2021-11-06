@@ -33,7 +33,13 @@ class MainWindow(QMainWindow):
     self.showMaximized()
     self.createActions()
     self.createMenuBar()
+    
     self.setStatusBar(QStatusBar(self))
+    self.progressBar = QProgressBar()
+    self.statusBar().addPermanentWidget(self.progressBar)
+    self.progressBar.hide()
+    self.loadImageSignal = None
+    self.loadImageWindow = None
  
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
@@ -118,6 +124,10 @@ class MainWindow(QMainWindow):
     sub = ImageDisplay(image, title, self.threadpool)
     sub.signals.mouse_moved.connect(self.updateStatusBar)
     sub.signals.selection_done.connect(lambda crop: self.createMDIImage(title, crop))
+    if self.loadImageSignal:
+      self.loadImageWindow.disconnect(self.loadImageSignal)
+    self.loadImageSignal = sub.signals.progress.connect(self.manageProgressBar)
+    self.loadImageWindow = sub
     self.mdi.addSubWindow(sub)
     sub.show()
 
@@ -154,12 +164,15 @@ class MainWindow(QMainWindow):
   def histogramsDialog(self):
     image = self.mdi.activeSubWindow()
     if image:
-      histograms = []
-      for cumulative in [False, True]:
-        histograms += createHistogram(self, image, cumulative)
-      self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+      if image.image_data:
+        histograms = []
+        for cumulative in [False, True]:
+          histograms += createHistogram(self, image, cumulative)
+        self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
     else:
-      QMessageBox.information(self, "Help", f"Nothing selected!")
+      QMessageBox.information(self, "Help", f"No picture selected!")
 
   def informationDialog(self):
     imageSubWin = self.mdi.activeSubWindow()
@@ -173,10 +186,22 @@ class MainWindow(QMainWindow):
       raise "Operation callback not defined!"
     sub = self.mdi.activeSubWindow()
     if sub:
-      result_image = op_callback(sub.image_data)
-      self.createMDIImage(sub.title, result_image)
+      if sub.image_data:
+        result_image = op_callback(sub.image_data)
+        self.createMDIImage(sub.title, result_image)
+      else:
+        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
     else:
       QMessageBox.information(self, "Help", "No picture selected!")
+
+  def manageProgressBar(self, progress):
+    if not self.progressBar.isVisible():
+      self.progressBar.show()
+    self.progressBar.setValue(progress)
+    if progress == 100:
+      self.progressBar.reset()
+      self.progressBar.hide()
+      self.loadImageSignal = self.loadImageWindow = None
 
 def run():
   appctx = ApplicationContext()

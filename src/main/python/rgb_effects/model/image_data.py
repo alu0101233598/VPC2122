@@ -3,7 +3,7 @@ from PIL import Image
 import os
 import math
 class ImageData:
-  def __init__(self, image):
+  def __init__(self, image, **kwargs):
     self.image = image
 
     self.r = list(self.image.getdata(band=0))
@@ -15,11 +15,17 @@ class ImageData:
     self.width = self.image.width
     self.size = self.height * self.width
 
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(16)
     self.setHistogramAndRange()
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(32)
     self.setCumHistogram()
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(48)
     self.setHistogramMean()
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(64)
     self.setHistogramStDev()
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(80)
     self.setEntropy()
+    if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(100)
 
   def __len__(self):
     return len(self.r)
