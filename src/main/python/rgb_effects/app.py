@@ -13,6 +13,7 @@ from PIL import Image
 
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
+from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.operation import grayscale
 
@@ -38,6 +39,7 @@ class MainWindow(QMainWindow):
     self.setCentralWidget(self.mdi)
     self.threadpool = QThreadPool()
     self.histogramDisplays = []
+    self.informationDisplays = []
 
   def createActions(self):
     # File menu
@@ -51,7 +53,7 @@ class MainWindow(QMainWindow):
     self.exitAction.triggered.connect(qApp.quit)
     # Edit menu
     self.informationAction = QAction("&Image information")
-    # self.informationAction.triggered.connect()
+    self.informationAction.triggered.connect(self.informationDialog)
     self.histogramsAction = QAction("&Histograms", self)
     self.histogramsAction.triggered.connect(self.histogramsDialog)
     self.histogramsAction.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_H))
@@ -156,6 +158,13 @@ class MainWindow(QMainWindow):
       for cumulative in [False, True]:
         histograms += createHistogram(self, image, cumulative)
       self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+    else:
+      QMessageBox.information(self, "Help", f"Nothing selected!")
+
+  def informationDialog(self):
+    imageSubWin = self.mdi.activeSubWindow()
+    if imageSubWin:
+      self.informationDisplays.append(InformationDisplay(imageSubWin))
     else:
       QMessageBox.information(self, "Help", f"Nothing selected!")
 
