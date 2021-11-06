@@ -14,6 +14,7 @@ from PIL import Image
 from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.gui.information_display import InformationDisplay
+from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.operation import grayscale
 
