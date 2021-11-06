@@ -43,6 +43,18 @@ class ImageData:
     else:
       return values[index]
 
+  def brightnessIter(self):
+    yield self.rBrightness
+    if not self.isGray:
+      yield self.gBrightness
+      yield self.bBrightness
+  
+  def contrastIter(self):
+    yield self.rContrast
+    if not self.isGray:
+      yield self.gContrast
+      yield self.bContrast
+
   def setHistogramAndRange(self):
     self.rHistogram = [0] * 256
     self.gHistogram = [0] * 256
