@@ -19,7 +19,7 @@ class ImageData:
     self.setCumHistogram()
     self.setHistogramMean()
     self.setHistogramStDev()
-    # self.setEntropy()
+    self.setEntropy()
 
   def __len__(self):
     return len(self.r)
@@ -98,9 +98,9 @@ class ImageData:
   def setEntropy(self):
     self.rEntropy = self.gEntropy = self.bEntropy = 0
     for i in range(256):
-      rP = self.rHistogram[i]
-      gP = self.gHistogram[i]
-      bP = self.bHistogram[i]
+      rP = self.rHistogram[i] if self.rHistogram[i] > 0 else 1
+      gP = self.gHistogram[i] if self.gHistogram[i] > 0 else 1
+      bP = self.bHistogram[i] if self.bHistogram[i] > 0 else 1
 
       self.rEntropy += rP * math.log(rP, 2)
       self.gEntropy += gP * math.log(gP, 2)

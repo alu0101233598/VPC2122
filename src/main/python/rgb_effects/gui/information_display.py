@@ -16,41 +16,28 @@ class InformationDisplay(QDialog):
 
     self.format = str(self.image.format)
     self.size = str(self.image.size)
-    self.RgbOrGrayscale = "Grayscale" if self.data.isGray else "RGB"
+    self.isGray = self.data.isGray
+    self.rgbOrGrayscale = "Grayscale" if self.isGray else "RGB"
 
-    self.rRange = str(self.data.rRange)
-    self.gRange = str(self.data.gRange)
-    self.bRange = str(self.data.bRange)
+    self.range = list(map(str, [self.data.rRange, self.data.gRange, self.data.bRange]))
+    self.brightness = list(map(self.roundedStr, [self.data.rBrightness, self.data.gBrightness, self.data.bBrightness]))
+    self.contrast = list(map(self.roundedStr, [self.data.rContrast, self.data.gContrast, self.data.bContrast]))
+    self.entropy = list(map(self.roundedStr, [self.data.rEntropy, self.data.gEntropy, self.data.bEntropy]))
 
-    self.rBrightness = self.roundedStr(self.data.rBrightness)
-    self.gBrightness = self.roundedStr(self.data.gBrightness)
-    self.bBrightness = self.roundedStr(self.data.bBrightness)
-
-    self.rContrast = self.roundedStr(self.data.rContrast)
-    self.gContrast = self.roundedStr(self.data.gContrast)
-    self.bContrast = self.roundedStr(self.data.bContrast)
-
-    '''
-    self.rEntropy = self.roundedStr(self.data.rEntropy)
-    self.gEntropy = self.roundedStr(self.data.gEntropy)
-    self.bEntropy = self.roundedStr(self.data.bEntropy)
-    '''
+    self.dataStr = ""
+    properties = [("Range", self.range), ("Brightness", self.brightness), ("Contrast", self.contrast), ("Entropy", self.entropy)]
+    colors = ["Grayscale"] if self.isGray else ["Red", "Green", "Blue"]
+    for i in range(len(properties)):
+      for j in range(len(colors)):
+        self.dataStr += colors[j] + " " + properties[i][0] + ": " + properties[i][1][j] + "\n"
+      self.dataStr += "\n"
 
     self.layout = QVBoxLayout()
     self.label = QLabel()
-    self.label.setText("File Type: " + self.format + "\n" + \
-                        "Size: " + self.size + "\n" + \
-                        "RGB or Grayscale: " + self.RgbOrGrayscale + "\n\n" + \
-                        "Red Range: " + self.rRange + "\n" + \
-                        "Green Range: " + self.gRange + "\n" + \
-                        "Blue Range: " + self.bRange + "\n\n" + \
-                        "Red Brightness: " + self.rBrightness + "\n" + \
-                        "Green Brightness: " + self.gBrightness + "\n" + \
-                        "Blue Brightness: " + self.bBrightness + "\n\n" + \
-                        "Red Contrast: " + self.rContrast + "\n" + \
-                        "Green Contrast: " + self.gContrast + "\n" + \
-                        "Blue Contrast: " + self.bContrast + "\n\n")# + \
-                        #"Red Entropy: " + self.rEntropy + "\n")
+    self.label.setText("\nFile Type: " + self.format + "\n" + \
+                       "Size: " + self.size + "\n" + \
+                       "RGB or Grayscale: " + self.rgbOrGrayscale + "\n\n" + \
+                       self.dataStr)
 
     self.layout.addWidget(ImageLabel(self.image, self, alignment=Qt.AlignCenter))
     self.layout.addWidget(self.label)
@@ -58,7 +45,7 @@ class InformationDisplay(QDialog):
     self.setLayout(self.layout)
 
     self.setWindowTitle(self.title + " Information")
-    self.setFixedSize(350 + self.image.size[0] * 1.2, 600 + self.image.size[1] * 1.2)
+    self.setFixedSize(400 + self.image.size[0] * 1.2, (500 if self.isGray else 800) + self.image.size[1] * 1.2)
     self.show()
 
   def roundedStr(self, x):
