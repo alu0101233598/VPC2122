@@ -14,7 +14,8 @@ class InformationDisplay(QDialog):
     self.data = imageSubWin.image_data
     self.title = imageSubWin.title
 
-    self.format = str(self.image.format)
+    possibleFormat = self.title.split(".")[-1]
+    self.format = possibleFormat if possibleFormat != self.title else "None"
     self.size = str(self.image.size)
     self.isGray = self.data.isGray
     self.rgbOrGrayscale = "Grayscale" if self.isGray else "RGB"
