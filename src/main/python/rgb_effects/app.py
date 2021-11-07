@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
     # self.gammaAction.triggered.connect()
     self.imageDiferenceAction = QAction("Image &diference")
     self.imageDiferenceAction.triggered.connect(
-      lambda: self.applyOperationDialog(DifferenceDisplay, difference.calculate_difference)
+      lambda: self.applyOperationDialog(DifferenceDisplay, difference.calculate_absolute_difference)
     )
     self.changesAction = QAction("&Changes")
     # self.changesAction.triggered.connect()
