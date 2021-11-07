@@ -13,7 +13,7 @@ def apply(_, param):
   for i in range(len(cum_histogram_image_a)):
     LUT.append([])
     for j in range(256):
-      LUT[i].append(search(cum_histogram_image_a[i][j], cum_histogram_image_b[i]))
+      LUT[i].append(search(cum_histogram_image_a[i][j], cum_histogram_image_b[0 if image_b.isGray else i]))
 
   for band in range(3):
     for pixel in range(len(out_image[band])):
@@ -26,5 +26,6 @@ def search(x, arr):
     if x < elem:
       return i - 1 if abs(x - pre) < abs(x - elem) else i
     pre = elem
+  return arr[-1]
     
 
