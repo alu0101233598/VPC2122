@@ -75,7 +75,9 @@ class MainWindow(QMainWindow):
     self.linearTransformAction = QAction("Segmented &linear transformation")
     # self.linearTransformAction.triggered.connect()
     self.brightnessContrastAction = QAction("&Brightness / Contrast")
-    self.brightnessContrastAction.triggered.connect(lambda: self.applyOperationDialog(BrightnessContrastDisplay, brightness_contrast.apply_transformation))
+    self.brightnessContrastAction.triggered.connect(
+      lambda: self.applyOperationDialog(BrightnessContrastDisplay, brightness_contrast.apply_transformation)
+    )
     self.histogramEqAction = QAction("Histogram &equalization")
     # self.histogramEqAction.triggered.connect()
     self.histogramSpecAction = QAction("Histogram &specification")
@@ -166,55 +168,48 @@ class MainWindow(QMainWindow):
     if sub:
       self.createMDIImage(sub.title, sub.image)
 
-  def histogramsDialog(self):
-    image = self.mdi.activeSubWindow()
-    if image:
-      if image.image_data:
-        histograms = []
-        for cumulative in [False, True]:
-          histograms += createHistogram(self, image, cumulative)
-        self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
-      else:
-        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
-    else:
-      QMessageBox.information(self, "Help", f"No picture selected!")
-
-  def informationDialog(self):
-    imageSubWin = self.mdi.activeSubWindow()
-    if imageSubWin:
-      self.informationDisplays.append(InformationDisplay(imageSubWin))
-    else:
-      QMessageBox.information(self, "Help", f"Nothing selected!")
-
-  def applyOperationDialog(self, dialog_class, op_callback):
-    if not dialog_class:
-      raise "Dialog is missing!"
+  def getActiveWindow(self):
     sub = self.mdi.activeSubWindow()
     if sub:
       if sub.image_data:
-        dialog = dialog_class(sub)
-        dialog.signals.done.connect(lambda x: self.applyOperation(op_callback, x))
-        dialog.exec()
+        return sub
       else:
         QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
     else:
       QMessageBox.information(self, "Help", "No picture selected!")
+
+  def histogramsDialog(self):
+    image = self.getActiveWindow()
+    if image:
+      histograms = []
+      for cumulative in [False, True]:
+        histograms += createHistogram(self, image, cumulative)
+      self.histogramDisplays.append(HistogramDisplay(histograms, image.title, parent=self))
+      
+  def informationDialog(self):
+    imageSubWin = self.getActiveWindow()
+    if imageSubWin:
+      self.informationDisplays.append(InformationDisplay(imageSubWin))
+    
+  def applyOperationDialog(self, dialog_class, op_callback):
+    if not dialog_class:
+      raise "Dialog is missing!"
+    sub = self.getActiveWindow()
+    if sub:
+      dialog = dialog_class(sub)
+      dialog.signals.done.connect(lambda x: self.applyOperation(op_callback, x))
+      dialog.exec()
 
   def applyOperation(self, op_callback, param = None):
     if not op_callback:
       raise "Operation callback not defined!"
-    sub = self.mdi.activeSubWindow()
+    sub = self.getActiveWindow()
     if sub:
-      if sub.image_data:
-        if param:
-          result_image = op_callback(sub.image_data, param)
-        else:
-          result_image = op_callback(sub.image_data)
-        self.createMDIImage(sub.title, result_image)
+      if param:
+        result_image = op_callback(sub.image_data, param)
       else:
-        QMessageBox.information(self, "Help", "The picture is being processed, please wait.")
-    else:
-      QMessageBox.information(self, "Help", "No picture selected!")
+        result_image = op_callback(sub.image_data)
+      self.createMDIImage(sub.title, result_image)
 
   def manageProgressBar(self, progress):
     if not self.progressBar.isVisible():
