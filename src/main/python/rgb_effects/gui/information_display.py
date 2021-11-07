@@ -40,13 +40,11 @@ class InformationDisplay(QDialog):
                        "RGB or Grayscale: " + self.rgbOrGrayscale + "\n\n" + \
                        self.dataStr)
 
-    self.layout.addWidget(ImageLabel(self.image, self, alignment=Qt.AlignCenter))
     self.layout.addWidget(self.label)
     self.layout.setAlignment(Qt.AlignCenter)
     self.setLayout(self.layout)
 
     self.setWindowTitle(self.title + " Information")
-    self.setFixedSize(400 + self.image.size[0] * 1.2, (500 if self.isGray else 800) + self.image.size[1] * 1.2)
     self.show()
 
   def roundedStr(self, x):
