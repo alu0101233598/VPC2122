@@ -15,6 +15,7 @@ from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
+from rgb_effects.gui.difference_display import DifferenceDisplay
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.operation import grayscale, brightness_contrast
 
@@ -85,7 +86,9 @@ class MainWindow(QMainWindow):
     self.gammaAction = QAction("Ga&mma correction")
     # self.gammaAction.triggered.connect()
     self.imageDiferenceAction = QAction("Image &diference")
-    # self.imageDiferenceAction.triggered.connect()
+    self.imageDiferenceAction.triggered.connect(
+      lambda: self.applyOperationDialog(DifferenceDisplay, None)
+    )
     self.changesAction = QAction("&Changes")
     # self.changesAction.triggered.connect()
 
