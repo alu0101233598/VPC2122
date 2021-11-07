@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QLabel, QMdiArea, QComboBox
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QMdiArea, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from rgb_effects.common.display_signals import DisplaySignals
@@ -33,5 +33,8 @@ class DifferenceDisplay(QDialog):
   def accept_and_finish(self):
     a = self.windows[self.a_combobox.currentIndex()].image_data
     b = self.windows[self.b_combobox.currentIndex()].image_data
+    if a.width != b.width or a.height != b.height:
+      QMessageBox.critical(self, "Operation failed", "Cannot substract pictures with different sizes.")
+      return
     self.signals.done.emit((a, b))
     self.accept()
