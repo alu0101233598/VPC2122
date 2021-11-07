@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
  
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
+    self.counter = 1
     self.threadpool = QThreadPool()
     self.histogramDisplays = []
     self.informationDisplays = []
@@ -122,7 +123,10 @@ class MainWindow(QMainWindow):
     helpMenu.addAction(self.aboutAction)
 
   def createMDIImage(self, title, image):
-    sub = ImageDisplay(image, title, self.threadpool)
+    bare_title = re.sub(r'\(\d+\)\s*', '', title)
+    formatted_title = f"({self.counter}) {bare_title}"
+    sub = ImageDisplay(image, formatted_title, self.threadpool)
+    self.counter += 1
     sub.signals.mouse_moved.connect(self.updateStatusBar)
     sub.signals.selection_done.connect(lambda crop: self.createMDIImage(title, crop))
     if self.loadImageSignal:
