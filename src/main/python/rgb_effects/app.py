@@ -208,11 +208,14 @@ class MainWindow(QMainWindow):
       raise "Operation callback not defined!"
     sub = self.getActiveWindow()
     if sub:
+      title = sub.title
       if param:
+        if type(param[-1]) is dict and "title" in param[-1]:
+          title = param[-1]["title"]
         result_image = op_callback(sub.image_data, param)
       else:
         result_image = op_callback(sub.image_data)
-      self.createMDIImage(sub.title, result_image)
+      self.createMDIImage(title, result_image)
 
   def manageProgressBar(self, progress):
     if not self.progressBar.isVisible():

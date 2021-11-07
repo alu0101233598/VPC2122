@@ -31,10 +31,11 @@ class DifferenceDisplay(QDialog):
     self.setLayout(layout)
 
   def accept_and_finish(self):
-    a = self.windows[self.a_combobox.currentIndex()].image_data
-    b = self.windows[self.b_combobox.currentIndex()].image_data
-    if a.width != b.width or a.height != b.height:
+    a = self.windows[self.a_combobox.currentIndex()]
+    b = self.windows[self.b_combobox.currentIndex()]
+    title = f"Difference: {a.title} - {b.title}"
+    if a.image_data.width != b.image_data.width or a.image_data.height != b.image_data.height:
       QMessageBox.critical(self, "Operation failed", "Cannot substract pictures with different sizes.")
       return
-    self.signals.done.emit((a, b))
+    self.signals.done.emit((a.image_data, b.image_data, {"title": title}))
     self.accept()
