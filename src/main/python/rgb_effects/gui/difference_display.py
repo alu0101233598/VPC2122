@@ -7,7 +7,7 @@ class DifferenceDisplay(QDialog):
   def __init__(self, window, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.signals = DisplaySignals()
-    self.windows = window.mdiArea().subWindowList(order=QMdiArea.ActivationHistoryOrder)
+    self.windows = window.mdiArea().subWindowList(order=QMdiArea.ActivationHistoryOrder)[::-1]
     self.titles = list(map(lambda x: x.title, self.windows))
     qbtn = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
     buttonBox = QDialogButtonBox(qbtn)
@@ -23,10 +23,15 @@ class DifferenceDisplay(QDialog):
     layout.addWidget(QLabel("Picture B"))
     self.b_combobox = QComboBox()
     self.b_combobox.addItems(self.titles)
+    if len(self.titles) > 1:
+      self.b_combobox.setCurrentIndex(1)
     layout.addWidget(self.b_combobox)
 
     layout.addWidget(buttonBox)
     self.setLayout(layout)
 
   def accept_and_finish(self):
+    a = self.windows[self.a_combobox.currentIndex()].image_data
+    b = self.windows[self.b_combobox.currentIndex()].image_data
+    self.signals.done.emit((a, b))
     self.accept()

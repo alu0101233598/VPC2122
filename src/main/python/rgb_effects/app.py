@@ -17,7 +17,7 @@ from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.gui.difference_display import DifferenceDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast
+from rgb_effects.operation import grayscale, brightness_contrast, difference
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
     # self.gammaAction.triggered.connect()
     self.imageDiferenceAction = QAction("Image &diference")
     self.imageDiferenceAction.triggered.connect(
-      lambda: self.applyOperationDialog(DifferenceDisplay, None)
+      lambda: self.applyOperationDialog(DifferenceDisplay, difference.calculate_difference)
     )
     self.changesAction = QAction("&Changes")
     # self.changesAction.triggered.connect()
