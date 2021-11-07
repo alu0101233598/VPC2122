@@ -15,8 +15,9 @@ from rgb_effects.gui.image_display import ImageDisplay
 from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
+from rgb_effects.gui.difference_display import DifferenceDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast
+from rgb_effects.operation import grayscale, brightness_contrast, difference
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -85,7 +86,9 @@ class MainWindow(QMainWindow):
     self.gammaAction = QAction("Ga&mma correction")
     # self.gammaAction.triggered.connect()
     self.imageDiferenceAction = QAction("Image &diference")
-    # self.imageDiferenceAction.triggered.connect()
+    self.imageDiferenceAction.triggered.connect(
+      lambda: self.applyOperationDialog(DifferenceDisplay, difference.calculate_absolute_difference)
+    )
     self.changesAction = QAction("&Changes")
     # self.changesAction.triggered.connect()
 
@@ -205,11 +208,14 @@ class MainWindow(QMainWindow):
       raise "Operation callback not defined!"
     sub = self.getActiveWindow()
     if sub:
+      title = sub.title
       if param:
+        if type(param[-1]) is dict and "title" in param[-1]:
+          title = param[-1]["title"]
         result_image = op_callback(sub.image_data, param)
       else:
         result_image = op_callback(sub.image_data)
-      self.createMDIImage(sub.title, result_image)
+      self.createMDIImage(title, result_image)
 
   def manageProgressBar(self, progress):
     if not self.progressBar.isVisible():
