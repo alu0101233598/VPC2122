@@ -55,6 +55,12 @@ class ImageData:
       yield self.gContrast
       yield self.bContrast
 
+  def cumHistogramIter(self):
+    yield self.rCumHistogram
+    if not self.isGray:
+      yield self.gCumHistogram
+      yield self.bCumHistogram
+
   def setHistogramAndRange(self):
     self.rHistogram = [0] * 256
     self.gHistogram = [0] * 256
