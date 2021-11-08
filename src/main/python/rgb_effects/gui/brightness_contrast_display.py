@@ -16,6 +16,7 @@ class BrightnessContrastDisplay(QDialog):
     # Dialog initialization
     self.signals = DisplaySignals()
     self.window = window
+    self.setWindowTitle("Brightness and Contrast Operation")
     qbtn = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
     buttonBox = QDialogButtonBox(qbtn)
     buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.accept_and_finish)

@@ -8,6 +8,7 @@ class HistogramSpecificationDisplay(QDialog):
     super().__init__(*args, **kwargs)
     self.signals = DisplaySignals()
     self.windows = window.mdiArea().subWindowList(order=QMdiArea.ActivationHistoryOrder)[::-1]
+    self.setWindowTitle("Histogram Specification Operation")
     self.titles = list(map(lambda x: x.title, self.windows))
     qbtn = QDialogButtonBox.Apply | QDialogButtonBox.Cancel
     buttonBox = QDialogButtonBox(qbtn)
