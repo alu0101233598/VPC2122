@@ -17,10 +17,10 @@ from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.gui.difference_display import DifferenceDisplay
 from rgb_effects.gui.histogram_specification_display import HistogramSpecificationDisplay
-from rgb_effects.gui.equalization_display import EqualizationDisplay
+from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma
+from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -77,15 +77,15 @@ class MainWindow(QMainWindow):
     self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.NTSC_conversion))
     self.grayscaleAction.setShortcut(QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_G))
     self.linearTransformAction = QAction("Segmented &linear transformation")
-    # self.linearTransformAction.triggered.connect()
+    self.linearTransformAction.triggered.connect(
+      lambda: self.applyOperationDialog(LinearTransformDisplay, linear_transform.apply)
+    )
     self.brightnessContrastAction = QAction("&Brightness / Contrast")
     self.brightnessContrastAction.triggered.connect(
       lambda: self.applyOperationDialog(BrightnessContrastDisplay, brightness_contrast.apply_transformation)
     )
     self.histogramEqAction = QAction("Histogram &equalization")
-    self.histogramEqAction.triggered.connect(
-      lambda: self.applyOperationDialog(EqualizationDisplay, equalization.apply)
-    )
+    self.histogramEqAction.triggered.connect(lambda: self.applyOperation(equalization.apply))
     self.histogramSpecAction = QAction("Histogram &specification")
     self.histogramSpecAction.triggered.connect(
       lambda: self.applyOperationDialog(HistogramSpecificationDisplay, histogram_specification.apply)
