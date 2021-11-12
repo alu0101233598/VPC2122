@@ -2,8 +2,7 @@ from copy import deepcopy
 
 from rgb_effects.model import image_data as id
 
-def apply(_, param):
-  image_a, __ = param
+def apply(image_a):
   out_image = deepcopy(image_a)
 
   cum_histogram_image_a = [image_a.rCumHistogram] if image_a.isGray else [image_a.rCumHistogram, image_a.gCumHistogram, image_a.bCumHistogram]

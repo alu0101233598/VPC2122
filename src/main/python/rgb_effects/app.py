@@ -17,7 +17,6 @@ from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.gui.difference_display import DifferenceDisplay
 from rgb_effects.gui.histogram_specification_display import HistogramSpecificationDisplay
-from rgb_effects.gui.equalization_display import EqualizationDisplay
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.model.image_data import ImageData
@@ -86,9 +85,7 @@ class MainWindow(QMainWindow):
       lambda: self.applyOperationDialog(BrightnessContrastDisplay, brightness_contrast.apply_transformation)
     )
     self.histogramEqAction = QAction("Histogram &equalization")
-    self.histogramEqAction.triggered.connect(
-      lambda: self.applyOperationDialog(EqualizationDisplay, equalization.apply)
-    )
+    self.histogramEqAction.triggered.connect(lambda: self.applyOperation(equalization.apply))
     self.histogramSpecAction = QAction("Histogram &specification")
     self.histogramSpecAction.triggered.connect(
       lambda: self.applyOperationDialog(HistogramSpecificationDisplay, histogram_specification.apply)
