@@ -17,6 +17,7 @@ class ImageDisplay(QMdiSubWindow):
     self.title = title
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
+    self.setAttribute(Qt.WA_DeleteOnClose)
     
     label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
     label.signals.mouse_moved.connect(self.propagate_mouse_moved)
