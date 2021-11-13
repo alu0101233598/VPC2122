@@ -17,6 +17,7 @@ class ImageLabel(QLabel):
     self.setAlignment(Qt.AlignCenter)
     self.setMouseTracking(True)
     self.setPixmap(self.pixmap)
+    self.setCursor(Qt.CrossCursor)
 
   def mousePressEvent(self, event):
     self.origin = event.pos()
