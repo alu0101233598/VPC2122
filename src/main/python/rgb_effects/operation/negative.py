@@ -5,7 +5,7 @@ from rgb_effects.model import image_data as id
 def apply(image_a):
   out_image = deepcopy(image_a)
 
-  LUT = range(256).reverse()
+  LUT = [i for i in reversed(list(range(256)))]
 
   for band in range(3):
     for pixel in range(len(out_image[band])):

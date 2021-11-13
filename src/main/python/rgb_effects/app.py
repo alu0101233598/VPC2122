@@ -20,7 +20,7 @@ from rgb_effects.gui.histogram_specification_display import HistogramSpecificati
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform
+from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform, negative
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -76,6 +76,8 @@ class MainWindow(QMainWindow):
     self.grayscaleAction = QAction("&Grayscale conversion")
     self.grayscaleAction.triggered.connect(lambda: self.applyOperation(grayscale.NTSC_conversion))
     self.grayscaleAction.setShortcut(QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_G))
+    self.negativeAction = QAction("&Negative")
+    self.negativeAction.triggered.connect(lambda: self.applyOperation(negative.apply))
     self.linearTransformAction = QAction("Segmented &linear transformation")
     self.linearTransformAction.triggered.connect(
       lambda: self.applyOperationDialog(LinearTransformDisplay, linear_transform.apply)
@@ -123,6 +125,7 @@ class MainWindow(QMainWindow):
     imageMenu = menuBar.addMenu("&Operation")
     imageMenu.addSeparator()
     imageMenu.addAction(self.grayscaleAction)
+    imageMenu.addAction(self.negativeAction)
     imageMenu.addAction(self.linearTransformAction)
     imageMenu.addAction(self.brightnessContrastAction)
     imageMenu.addSeparator()
