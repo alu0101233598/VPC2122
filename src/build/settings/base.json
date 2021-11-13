@@ -1,6 +1,6 @@
 {
     "app_name": "RGB_Effects",
-    "author": "Javier Correa Marichal, Jose Daniel Escánez Expósito",
+    "author": "Javier Correa Marichal, Jose Daniel Escanez Exposito",
     "main_module": "src/main/python/rgb_effects/__main__.py",
     "version": "0.1.0"
 }
