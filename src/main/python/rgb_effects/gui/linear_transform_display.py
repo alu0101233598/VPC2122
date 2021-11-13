@@ -11,6 +11,7 @@ class LinearTransformDisplay(QDialog):
     super().__init__(*args, **kwargs)
     self.signals = DisplaySignals()
     self.windows = window
+    self.setAttribute(Qt.WA_DeleteOnClose)
     self.setWindowTitle("Linear Transformation")
 
     d = PiecewiseLinearTransformDisplay()
