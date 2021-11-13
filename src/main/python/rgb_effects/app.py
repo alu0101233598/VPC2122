@@ -16,6 +16,7 @@ from rgb_effects.gui.histogram_display import createHistogram, HistogramDisplay
 from rgb_effects.gui.information_display import InformationDisplay
 from rgb_effects.gui.brightness_contrast_display import BrightnessContrastDisplay
 from rgb_effects.gui.difference_display import DifferenceDisplay
+from rgb_effects.gui.changes_display import ChangeDisplay
 from rgb_effects.gui.histogram_specification_display import HistogramSpecificationDisplay
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
@@ -100,8 +101,10 @@ class MainWindow(QMainWindow):
     self.imageDiferenceAction.triggered.connect(
       lambda: self.applyOperationDialog(DifferenceDisplay, difference.calculate_absolute_difference)
     )
-    self.changesAction = QAction("&Changes")
-    # self.changesAction.triggered.connect()
+    self.changesAction = QAction("&Change map")
+    self.changesAction.triggered.connect(
+      lambda: self.applyOperationDialog(ChangeDisplay, difference.calculate_changes)
+    )
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
