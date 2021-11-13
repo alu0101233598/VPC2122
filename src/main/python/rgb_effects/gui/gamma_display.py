@@ -64,5 +64,5 @@ class GammaDisplay(QDialog):
 
   def accept_and_finish(self):
     title = f"Gamma Function: {self.window.title}"
-    self.signals.done.emit((self.window.image_data, list(map(lambda x: x.value(), self.gamma_sliders)), {"title": title}))
+    self.signals.done.emit((list(map(lambda x: x.value(), self.gamma_sliders)), {"title": title}))
     self.accept()

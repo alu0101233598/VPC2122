@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from rgb_effects.model import image_data as id
 
-def apply(_, param):
-  image_a, gamma, __ = param
+def apply(image_a, param):
+  gamma, __ = param
   out_image = deepcopy(image_a)
 
   LUT = []
