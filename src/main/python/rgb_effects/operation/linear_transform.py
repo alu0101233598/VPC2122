@@ -6,28 +6,29 @@ def apply(_, param):
   image_a, points, __ = param
   out_image = deepcopy(image_a)
 
-  i = 0
+  if points[0][0] != 0 and points[0][0] < points[1][0]:
+    if (points[0][0] != 1):
+      points.insert(0, [points[0][0] - 1, points[0][0] - 1])
+    points.insert(0, [0, 0])
+  if points[-1][0] != 255 and points[-2][0] < points[-1][0]:
+    if (points[-1][0] != 254):
+      points.append([points[-1][0] + 1, points[-1][0] + 1])
+    points.append([255, 255])
+
   LUT = []
-  for x in range(256):
-    y = x
-    if x > points[i + 1][0] and i < len(points) - 2:
-      i += 1
-    
+  for i in range(len(points) - 1):
     xi = points[i][0]
     xf = points[i + 1][0]
 
-    if xi != xf:
-      yi = points[i][1]
-      yf = points[i + 1][1]
+    yi = points[i][1]
+    yf = points[i + 1][1]
 
-      m = (yf - yi) // (xf - xi)
-      n = yi - m * xi
+    m = (yf - yi) / (xf - xi)
+    n = yi - m * xi
 
-      y = m * x + n
-    else:
-      print("Warning: Match on the pixel " + str(xi) + \
-            ". It has been assigned the same level as the input image")
-    LUT.append(y)
+    for x in range(xi, xf + 1):
+      y = round(m * x + n)
+      LUT.append(y)
 
   for band in range(3):
     for pixel in range(len(out_image[band])):

@@ -37,7 +37,7 @@ class LinearTransformDisplay(QDialog):
     for i in range(nPoints):
       h_layout = QHBoxLayout()
       
-      h_layout.addWidget(QLabel("Punto: "))
+      h_layout.addWidget(QLabel("Point: "))
       spin = QSpinBox()
       spin.setMinimum(0)
       spin.setMaximum(255)
@@ -46,7 +46,7 @@ class LinearTransformDisplay(QDialog):
       )
       h_layout.addWidget(spin)
 
-      h_layout.addWidget(QLabel("Valor: "))
+      h_layout.addWidget(QLabel("Value: "))
       spin2 = QSpinBox()
       spin2.setMinimum(0)
       spin2.setMaximum(255)
@@ -68,6 +68,12 @@ class LinearTransformDisplay(QDialog):
   def accept_and_finish(self):
     title = f"Linear Transformation"
     image_data = self.windows.image_data
+    for i in range(len(self.points) - 1):
+      if self.points[i][0] >= self.points[i + 1][0]:
+        QMessageBox.critical(self, "Operation failed", "Invalid linear " + \
+            "transformation\n" + "x in pi " + str(self.points[i]) + \
+                " <= x in pf " + str(self.points[i + 1]))
+        return
     self.signals.done.emit((image_data, self.points, {"title": title}))
     self.accept()
 
