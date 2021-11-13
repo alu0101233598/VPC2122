@@ -26,6 +26,7 @@ from rgb_effects.operation import grayscale, brightness_contrast, difference, hi
 # Global variables
 APP_NAME = "RGB_Effects"
 ICON_NAME = "icon.png"
+SUB_ICON_NAME = "icon_32x32.png"
 EXAMPLES_DIR = "examples"
 
 class MainWindow(QMainWindow):
@@ -146,6 +147,8 @@ class MainWindow(QMainWindow):
     bare_title = re.sub(r'\(\d+\)\s*', '', title)
     formatted_title = f"({self.counter}) {bare_title}"
     sub = ImageDisplay(image, formatted_title, self.threadpool)
+    icon_path = self.ctx.get_resource(SUB_ICON_NAME)
+    sub.setWindowIcon(QIcon(icon_path))
     self.counter += 1
     sub.signals.mouse_moved.connect(self.updateStatusBar)
     sub.signals.selection_done.connect(lambda crop: self.createMDIImage(title, crop))
