@@ -19,7 +19,7 @@ class PiecewiseLinearTransformDisplay(QDialog):
 
     # Linear Transformation initialization
     linear_transformation_layout = QVBoxLayout()
-    linear_transformation_label = QLabel("Linear Transformation")
+    linear_transformation_label = QLabel("Number of pieces")
     linear_transformation_layout.addWidget(linear_transformation_label)
 
     inner_layout = QHBoxLayout()
