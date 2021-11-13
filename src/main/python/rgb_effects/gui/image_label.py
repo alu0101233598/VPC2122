@@ -47,5 +47,7 @@ class ImageLabel(QLabel):
           rect = (self.origin.x(), self.end.y(), self.end.x(), self.origin.y())
         else:
           rect = (self.end.x(), self.end.y(), self.origin.x(), self.origin.y())
+      if rect[0] - rect[2] == 0 or rect[1] - rect[3] == 0:
+        return
       crop = self.image.crop(box=rect)
       self.signals.selection_done.emit(crop)
