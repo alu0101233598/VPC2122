@@ -23,7 +23,7 @@ def apply(_, param):
 def search(x, arr):
   pre = arr[0]
   for i, elem in enumerate(arr):
-    if x < elem:
+    if x <= elem:
       return i - 1 if abs(x - pre) < abs(x - elem) else i
     pre = elem
   return arr[-1]
