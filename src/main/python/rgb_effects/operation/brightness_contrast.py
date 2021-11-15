@@ -21,7 +21,7 @@ def apply_transformation(image_data, user_values):
         current_value = 255
       LUT[n].append(current_value)
 
-  # Apply transforamtion
+  # Apply transformation
   converted_image = deepcopy(image_data)
   for pixel in range(len(converted_image)):
     for n, band in enumerate(converted_image):
