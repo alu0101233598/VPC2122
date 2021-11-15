@@ -45,14 +45,14 @@ def createHistogram(self, image, cumulative):
   switchMean = {
     0: data.rBrightness,
     1: data.rBrightness,
-    2: data.bBrightness,
-    3: data.gBrightness
+    2: data.gBrightness,
+    3: data.bBrightness
   }
   switchRange = {
     0: data.rRange,
     1: data.rRange,
-    2: data.bRange,
-    3: data.gRange
+    2: data.gRange,
+    3: data.bRange
   }
 
   histograms = []
