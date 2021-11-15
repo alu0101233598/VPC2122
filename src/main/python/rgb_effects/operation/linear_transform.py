@@ -2,16 +2,16 @@ from copy import deepcopy
 
 from rgb_effects.model import image_data as id
 
-def apply(_, param):
-  image_a, points, __ = param
+def apply(image_a, param):
+  points, __ = param
   out_image = deepcopy(image_a)
 
-  if points[0][0] != 0 and points[0][0] < points[1][0]:
-    if (points[0][0] != 1):
+  if points[0][0] != 0:
+    if points[0][0] != 1:
       points.insert(0, [points[0][0] - 1, points[0][0] - 1])
     points.insert(0, [0, 0])
-  if points[-1][0] != 255 and points[-2][0] < points[-1][0]:
-    if (points[-1][0] != 254):
+  if points[-1][0] != 255:
+    if points[-1][0] != 254:
       points.append([points[-1][0] + 1, points[-1][0] + 1])
     points.append([255, 255])
 
@@ -30,7 +30,7 @@ def apply(_, param):
       y = round(m * x + n)
       LUT.append(y)
 
-  for band in range(3):
-    for pixel in range(len(out_image[band])):
-      out_image[band][pixel] = LUT[image_a[band][pixel]]
+  for n, band in enumerate(out_image):
+    for pixel in range(len(out_image)):
+      band[pixel] = LUT[image_a[n][pixel]]
   return id.dataToImage(out_image)

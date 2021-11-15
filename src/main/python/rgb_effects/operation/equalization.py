@@ -13,7 +13,7 @@ def apply(image_a):
     for j in range(256):
       LUT[i].append(max(0, round(256 * cum_histogram_image_a[i][j]) - 1))
 
-  for band in range(3):
-    for pixel in range(len(out_image[band])):
-      out_image[band][pixel] = LUT[0 if image_a.isGray else band][image_a[band][pixel]]
+  for n, band in enumerate(out_image):
+    for pixel in range(len(out_image)):
+      band[pixel] = LUT[n][image_a[n][pixel]]
   return id.dataToImage(out_image)

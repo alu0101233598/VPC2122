@@ -7,7 +7,7 @@ LUT = [i for i in reversed(list(range(256)))]
 def apply(image_a):
   out_image = deepcopy(image_a)
 
-  for band in range(3):
-    for pixel in range(len(out_image[band])):
-      out_image[band][pixel] = LUT[image_a[band][pixel]]
+  for n, band in enumerate(out_image):
+    for pixel in range(len(out_image)):
+      band[pixel] = LUT[image_a[n][pixel]]
   return id.dataToImage(out_image)

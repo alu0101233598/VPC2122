@@ -23,6 +23,8 @@ def calculate_absolute_difference(_, param):
       pixel_b = image_b[band][pixel]
       value = LUT[pixel_a][pixel_b] if pixel_a < pixel_b else LUT[pixel_b][pixel_a]
       diff_image[band][pixel] = value
+      
+  diff_image.isGray = False
   return id.dataToImage(diff_image)
 
 def calculate_changes(_, param):

@@ -17,7 +17,7 @@ class HistogramSpecificationDisplay(QDialog):
     layout = QVBoxLayout()
     layout.setSpacing(10)
 
-    layout.addWidget(QLabel("Picture to Specify the histogram"))
+    layout.addWidget(QLabel("Target image"))
     self.a_combobox = QComboBox()
     self.a_combobox.addItems(self.titles)
     layout.addWidget(self.a_combobox)

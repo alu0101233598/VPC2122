@@ -68,14 +68,13 @@ class LinearTransformDisplay(QDialog):
 
   def accept_and_finish(self):
     title = f"Linear Transformation"
-    image_data = self.windows.image_data
     for i in range(len(self.points) - 1):
       if self.points[i][0] >= self.points[i + 1][0]:
         QMessageBox.critical(self, "Operation failed", "Invalid linear " + \
             "transformation\n" + "x in pi " + str(self.points[i]) + \
                 " <= x in pf " + str(self.points[i + 1]))
         return
-    self.signals.done.emit((image_data, self.points, {"title": title}))
+    self.signals.done.emit((self.points, {"title": title}))
     self.accept()
 
   def actualize_plot(self, spin_value, i, j):
