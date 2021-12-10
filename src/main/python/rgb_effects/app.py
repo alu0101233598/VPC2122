@@ -21,7 +21,7 @@ from rgb_effects.gui.histogram_specification_display import HistogramSpecificati
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform, negative
+from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform, negative, mirror
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -106,6 +106,10 @@ class MainWindow(QMainWindow):
     self.changesAction.triggered.connect(
       lambda: self.applyOperationDialog(ChangeDisplay, difference.calculate_changes)
     )
+    self.horizontalMirrorAction = QAction("&Horizontal Mirror")
+    self.horizontalMirrorAction.triggered.connect(lambda: self.applyOperation(mirror.horizontal_mirror))
+    self.verticalMirrorAction = QAction("&Vertical Mirror")
+    self.verticalMirrorAction.triggered.connect(lambda: self.applyOperation(mirror.vertical_mirror))
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
@@ -138,6 +142,8 @@ class MainWindow(QMainWindow):
     imageMenu.addAction(self.gammaAction)
     imageMenu.addAction(self.imageDiferenceAction)
     imageMenu.addAction(self.changesAction)
+    imageMenu.addAction(self.horizontalMirrorAction)
+    imageMenu.addAction(self.verticalMirrorAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
