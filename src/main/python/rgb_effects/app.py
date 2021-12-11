@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
     imageMenu.addAction(self.horizontalMirrorAction)
     imageMenu.addAction(self.verticalMirrorAction)
     imageMenu.addAction(self.transposeAction)
-    rotateSubMenu = imageMenu.addMenu("&Rotate Ninety Multiple")
+    rotateSubMenu = imageMenu.addMenu("&Rotate Ninety Multiple (anti-clockwise)")
     rotateSubMenu.addAction(self.rotate90Action)
     rotateSubMenu.addAction(self.rotate180Action)
     rotateSubMenu.addAction(self.rotate270Action)
