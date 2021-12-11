@@ -142,6 +142,7 @@ class MainWindow(QMainWindow):
     imageMenu.addAction(self.gammaAction)
     imageMenu.addAction(self.imageDiferenceAction)
     imageMenu.addAction(self.changesAction)
+    imageMenu.addSeparator()
     imageMenu.addAction(self.horizontalMirrorAction)
     imageMenu.addAction(self.verticalMirrorAction)
     # Help menu
