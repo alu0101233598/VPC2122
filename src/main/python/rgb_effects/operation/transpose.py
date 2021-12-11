@@ -1,5 +1,4 @@
 from PIL import Image
-from math import floor
 from copy import deepcopy
 
 from rgb_effects.model import image_data as id
