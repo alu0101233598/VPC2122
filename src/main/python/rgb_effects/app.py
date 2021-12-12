@@ -21,7 +21,8 @@ from rgb_effects.gui.histogram_specification_display import HistogramSpecificati
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.model.image_data import ImageData
-from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, gamma, linear_transform, negative
+from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, \
+                                  gamma, linear_transform, negative, mirror, transpose, rotate
 
 # Global variables
 APP_NAME = "RGB_Effects"
@@ -106,6 +107,18 @@ class MainWindow(QMainWindow):
     self.changesAction.triggered.connect(
       lambda: self.applyOperationDialog(ChangeDisplay, difference.calculate_changes)
     )
+    self.horizontalMirrorAction = QAction("&Horizontal Mirror")
+    self.horizontalMirrorAction.triggered.connect(lambda: self.applyOperation(mirror.horizontal_mirror))
+    self.verticalMirrorAction = QAction("&Vertical Mirror")
+    self.verticalMirrorAction.triggered.connect(lambda: self.applyOperation(mirror.vertical_mirror))
+    self.transposeAction = QAction("&Transpose")
+    self.transposeAction.triggered.connect(lambda: self.applyOperation(transpose.apply))
+    self.rotate90Action = QAction("90º")
+    self.rotate90Action.triggered.connect(lambda: self.applyOperation(rotate.rotate_90))
+    self.rotate180Action = QAction("180º")
+    self.rotate180Action.triggered.connect(lambda: self.applyOperation(rotate.rotate_180))
+    self.rotate270Action = QAction("270º")
+    self.rotate270Action.triggered.connect(lambda: self.applyOperation(rotate.rotate_270))
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
@@ -138,6 +151,14 @@ class MainWindow(QMainWindow):
     imageMenu.addAction(self.gammaAction)
     imageMenu.addAction(self.imageDiferenceAction)
     imageMenu.addAction(self.changesAction)
+    imageMenu.addSeparator()
+    imageMenu.addAction(self.horizontalMirrorAction)
+    imageMenu.addAction(self.verticalMirrorAction)
+    imageMenu.addAction(self.transposeAction)
+    rotateSubMenu = imageMenu.addMenu("&Rotate Ninety Multiple (anti-clockwise)")
+    rotateSubMenu.addAction(self.rotate90Action)
+    rotateSubMenu.addAction(self.rotate180Action)
+    rotateSubMenu.addAction(self.rotate270Action)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
