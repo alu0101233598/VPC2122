@@ -30,7 +30,7 @@ def apply(input_data, size_out_image, coordinates_map, interpolation_method):
   for i in range(output_data.height):
     for j in range(output_data.width):
       pixel_it = i * input_data.width + j
-      x, y = coordinates_map(input_data, i, j)
+      x, y = coordinates_map(i, j)
       for n, _ in enumerate(output_data):
         p = x - floor(x)
         q = y - floor(y)
