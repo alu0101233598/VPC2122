@@ -101,8 +101,8 @@ class ScaleDisplay(QDialog):
 
   def accept_and_finish(self):
     title = f"Scale Function: {self.window.title}"
-    x_scale_factor = int(floor(self.x_scale))
-    y_scale_factor = int(floor(self.y_scale))
+    x_scale_factor = self.x_scale / 100
+    y_scale_factor = self.y_scale / 100
     interpolation_method = self.interpolation_box.currentText()
     self.signals.done.emit((x_scale_factor, y_scale_factor, interpolation_method, {"title": title}))
     self.accept()
