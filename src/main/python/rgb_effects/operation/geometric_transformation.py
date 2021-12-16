@@ -22,16 +22,16 @@ def apply(input_data, size_out_image, coordinates_map, interpolation_method):
   output_data.b = [0] * output_data.size
 
   for i in range(0, output_data.height):
-    for j in range(output_data.width - 2, output_data.width):
+    for j in range(output_data.width - 3, output_data.width):
       border(input_data, output_data, interpolation_method, coordinates_map, i, j)
 
-  for i in range(output_data.height - 2, output_data.height):
+  for i in range(output_data.height - 3, output_data.height):
     for j in range(0, output_data.width):
       border(input_data, output_data, interpolation_method, coordinates_map, i, j)
 
 
-  for i in range(0, output_data.height - 2):
-    for j in range(0, output_data.width - 2):
+  for i in range(0, output_data.height - 3):
+    for j in range(0, output_data.width - 3):
       pixel_it = i * output_data.width + j
       x, y = coordinates_map(j, i)
       p = x - floor(x)
