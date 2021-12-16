@@ -88,10 +88,10 @@ class ScaleDisplay(QDialog):
     h_layout.addLayout(y_scale_layout)
 
     box_layout = QVBoxLayout()
+    box_layout.addWidget(QLabel("Interpolation"))
     self.interpolation_box = QComboBox()
     self.interpolation_box.addItem("Bilinear")
     self.interpolation_box.addItem("Nearest Neighbour")
-    box_layout.addWidget(QLabel("Interpolation"))
     box_layout.addWidget(self.interpolation_box)
 
     layout.addLayout(h_layout)
