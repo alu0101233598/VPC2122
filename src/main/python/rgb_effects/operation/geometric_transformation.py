@@ -25,6 +25,8 @@ def apply(input_data, size_out_image, coordinates_map, interpolation_method):
     for j in range(0, output_data.width):
       pixel_it = i * output_data.width + j
       x, y = coordinates_map(j, i)
+      if x < 0 or y < 0 or x >= input_data.width or y >= input_data.height:
+        continue
       x = x if x < input_data.width - 2 else input_data.width - 2
       y = y if y < input_data.height - 2 else input_data.height - 2
       p = x - floor(x)

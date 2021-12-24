@@ -55,7 +55,7 @@ class RotateDisplay(QDialog):
   def accept_and_finish(self):
     title = f"Rotate Function: {self.window.title}"
     checked = self.check_box.isChecked()
-    angle = (1 if checked else -1) * self.spin.value()
+    angle = (-1 if checked else 1) * self.spin.value()
     interpolation_method = self.interpolation_box.currentText()
     self.signals.done.emit((angle, interpolation_method, {"title": title}))
     self.accept()
