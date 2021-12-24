@@ -46,6 +46,7 @@ def apply(input_data, param):
   coordinates_map_dt = lambda i, j: (i * cos(rad) - j * sin(rad), i * sin(rad) + j * cos(rad))
   coordinates_map_it = lambda i, j: (i * cos(- rad) - j * sin(- rad), i * sin(- rad) + j * cos(- rad))
   
+  a = (0, 0)
   b = coordinates_map_dt(input_data.width, 0)
   c = coordinates_map_dt(0, input_data.height)
   d = coordinates_map_dt(input_data.width, input_data.height)
@@ -60,5 +61,5 @@ def apply(input_data, param):
     size_out_image = (d[0], c[1] - b[1])
   
   size_out_image = (round(size_out_image[0]), round(size_out_image[1]))
-
-  return geometric_transformation.apply(input_data, size_out_image, coordinates_map_it, interpolation_method)
+  origin = (min(a[0], b[0], c[0], d[0]), min(a[1], b[1], c[1], d[1]))
+  return geometric_transformation.apply(input_data, size_out_image, coordinates_map_it, interpolation_method, origin)
