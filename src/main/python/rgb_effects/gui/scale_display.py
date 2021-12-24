@@ -5,12 +5,6 @@ from math import floor
 
 from rgb_effects.common.display_signals import DisplaySignals
 
-spinbox_stylesheet = """
-QDoubleSpinBox {{
-  background: {color};
-}}
-"""
-
 class ScaleDisplay(QDialog):
   def __init__(self, window, *args, **kwargs):
     super().__init__(*args, **kwargs)

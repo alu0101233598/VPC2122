@@ -21,6 +21,7 @@ from rgb_effects.gui.histogram_specification_display import HistogramSpecificati
 from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.gui.scale_display import ScaleDisplay
+from rgb_effects.gui.rotate_display import RotateDisplay
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, \
                                   gamma, linear_transform, negative, mirror, transpose, rotate, scale
@@ -124,6 +125,10 @@ class MainWindow(QMainWindow):
     self.scaleAction.triggered.connect(
       lambda: self.applyOperationDialog(ScaleDisplay, scale.apply)
     )
+    self.rotateAction = QAction("Rotate")
+    self.rotateAction.triggered.connect(
+      lambda: self.applyOperationDialog(RotateDisplay, rotate.apply)
+    )
 
     # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
@@ -160,11 +165,12 @@ class MainWindow(QMainWindow):
     imageMenu.addAction(self.horizontalMirrorAction)
     imageMenu.addAction(self.verticalMirrorAction)
     imageMenu.addAction(self.transposeAction)
-    rotateSubMenu = imageMenu.addMenu("&Rotate Ninety Multiple (anti-clockwise)")
+    rotateSubMenu = imageMenu.addMenu("&Rotate Ninety Multiple (clockwise)")
     rotateSubMenu.addAction(self.rotate90Action)
     rotateSubMenu.addAction(self.rotate180Action)
     rotateSubMenu.addAction(self.rotate270Action)
     imageMenu.addAction(self.scaleAction)
+    imageMenu.addAction(self.rotateAction)
     # Help menu
     helpMenu = menuBar.addMenu("&Help")
     helpMenu.addAction(self.helpContentAction)
