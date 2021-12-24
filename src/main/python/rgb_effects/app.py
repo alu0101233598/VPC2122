@@ -22,6 +22,8 @@ from rgb_effects.gui.linear_transform_display import LinearTransformDisplay
 from rgb_effects.gui.gamma_display import GammaDisplay
 from rgb_effects.gui.scale_display import ScaleDisplay
 from rgb_effects.gui.rotate_display import RotateDisplay
+from rgb_effects.gui.help_display import HelpDisplay
+from rgb_effects.gui.about_display import AboutDisplay
 from rgb_effects.model.image_data import ImageData
 from rgb_effects.operation import grayscale, brightness_contrast, difference, histogram_specification, equalization, \
                                   gamma, linear_transform, negative, mirror, transpose, rotate, scale
@@ -130,9 +132,16 @@ class MainWindow(QMainWindow):
       lambda: self.applyOperationDialog(RotateDisplay, rotate.apply)
     )
 
-    # TODO: help menu
     self.helpContentAction = QAction("&Help Content", self)
+    self.helpContentAction.triggered.connect(self.showHelp)
     self.aboutAction = QAction("&About", self)
+    self.aboutAction.triggered.connect(self.showAbout)
+
+  def showHelp(self):
+    self.help = HelpDisplay()
+
+  def showAbout(self):
+    self.about = AboutDisplay()
 
   def createMenuBar(self):
     menuBar = self.menuBar()
