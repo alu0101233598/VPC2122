@@ -57,7 +57,7 @@ def apply(input_data, param):
   if 180 <= angle < 270 or - 180 <= angle < -90:
     size_out_image = (c[0] - b[0], - d[1])
   if 270 <= angle <= 360 or - 90 <= angle < 0:
-    size_out_image = (- d[0], c[1] - b[1])
+    size_out_image = (d[0], c[1] - b[1])
   
   size_out_image = (round(size_out_image[0]), round(size_out_image[1]))
 
