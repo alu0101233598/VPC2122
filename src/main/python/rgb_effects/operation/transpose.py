@@ -11,6 +11,6 @@ def apply(image_data):
   for n, _ in enumerate(transposed_data):
     for i in range(transposed_data.height):
       for j in range(transposed_data.width):
-        transposed_data[n][i * image_data.width + j] = image_data[n][j * image_data.width + i]
+        transposed_data[n][i * transposed_data.width + j] = image_data[n][j * transposed_data.height + i]
 
   return id.dataToImage(transposed_data)
