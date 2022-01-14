@@ -14,7 +14,7 @@ class AboutDisplay(QDialog):
 
     self.layout = QVBoxLayout()
     self.label = QLabel()
-    self.label.setText('Click <a href="https://github.com/alu0101233598/VPC2122/issues">here</a> to open an issue')
+    self.label.setText('Click <a href="https://github.com/alu0101233598/VPC2122">here</a> to see more')
     self.label.setOpenExternalLinks(True)
 
     self.layout.addWidget(self.label)
