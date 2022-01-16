@@ -10,7 +10,7 @@ from rgb_effects.model.image_data import ImageData
 from rgb_effects.common.worker import Worker
 
 class ImageDisplay(QMdiSubWindow):
-  def __init__(self, image, title, threadpool):
+  def __init__(self, image, title, threadpool, counter=0):
     super().__init__()
     self.signals = ImageSignals()
     self.image = image.convert("RGBA")
@@ -18,6 +18,7 @@ class ImageDisplay(QMdiSubWindow):
     self.threadpool = threadpool
     self.setWindowTitle(self.title)
     self.setAttribute(Qt.WA_DeleteOnClose)
+    self.counter = counter
     
     label = ImageLabel(self.image, self, alignment=Qt.AlignCenter)
     label.signals.mouse_moved.connect(self.propagate_mouse_moved)
@@ -36,7 +37,7 @@ class ImageDisplay(QMdiSubWindow):
     self.threadpool.start(worker)
     
   def process_image(self, **kwargs):
-    self.image_data = ImageData(self.image, **kwargs)
+    self.image_data = ImageData(self.image, self.counter, **kwargs)
 
   def load_error(self, e):
     QMessageBox.critical(self, "Error", f"Error loading {self.title}")

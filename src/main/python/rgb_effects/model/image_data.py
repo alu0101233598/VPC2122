@@ -3,7 +3,7 @@ from PIL import Image
 import os
 import math
 class ImageData:
-  def __init__(self, image, **kwargs):
+  def __init__(self, image, counter, **kwargs):
     self.image = image
 
     self.r = list(self.image.getdata(band=0))
@@ -13,6 +13,7 @@ class ImageData:
     self.isGray = self.r == self.g == self.b
     self.height = self.image.height
     self.width = self.image.width
+    self.counter = counter
     self.size = self.height * self.width
 
     if 'progress_callback' in kwargs: kwargs['progress_callback'].emit(16)
@@ -79,9 +80,18 @@ class ImageData:
       self.setMinMax(gTone, self.gRange)
       self.setMinMax(bTone, self.bRange)
 
-      self.rHistogram[rTone] += 1 / self.size
-      self.gHistogram[gTone] += 1 / self.size
-      self.bHistogram[bTone] += 1 / self.size
+      self.rHistogram[rTone] += 1
+      self.gHistogram[gTone] += 1
+      self.bHistogram[bTone] += 1
+
+    self.rHistogram[0] -= self.counter
+    self.gHistogram[0] -= self.counter
+    self.bHistogram[0] -= self.counter
+    self.size -= self.counter
+
+    self.rHistogram = [value / self.size for value in self.rHistogram]
+    self.gHistogram = [value / self.size for value in self.gHistogram]
+    self.bHistogram = [value / self.size for value in self.bHistogram]
 
   def setMinMax(self, x, minMax):
     if x < minMax[0]:
