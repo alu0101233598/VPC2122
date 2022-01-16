@@ -281,9 +281,12 @@ class MainWindow(QMainWindow):
         result_image = op_callback(sub.image_data, param)
       else:
         result_image = op_callback(sub.image_data)
+        
       if type(result_image) is tuple:
         result_image, counter = result_image
-      self.createMDIImage(title, result_image, counter)
+        self.createMDIImage(title, result_image, counter)
+      else:
+        self.createMDIImage(title, result_image)
 
   def manageProgressBar(self, progress):
     if not self.progressBar.isVisible():
