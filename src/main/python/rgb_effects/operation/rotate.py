@@ -60,6 +60,7 @@ def rotate_and_draw(input_data, param):
   output_data.r = [0] * output_data.size
   output_data.g = [0] * output_data.size
   output_data.b = [0] * output_data.size
+  counter_set = set([])
 
   for i in range(0, input_data.height):
     for j in range(0, input_data.width):
@@ -69,9 +70,10 @@ def rotate_and_draw(input_data, param):
       y = floor(y - origin[1])
       if x < 0 or y < 0 or x >= output_data.width or y >= output_data.height:
         continue
+      counter_set.add((x, y))
       for n, _ in enumerate(input_data):
         output_data[n][y * output_data.width + x] = input_data[n][pixel_it] 
-  return id.dataToImage(output_data)
+  return id.dataToImage(output_data), output_data.size - len(counter_set)
 
 def apply(input_data, param):
   angle, interpolation_method, __ = param

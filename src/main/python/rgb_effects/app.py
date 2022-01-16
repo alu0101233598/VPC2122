@@ -191,10 +191,10 @@ class MainWindow(QMainWindow):
     helpMenu.addAction(self.helpContentAction)
     helpMenu.addAction(self.aboutAction)
 
-  def createMDIImage(self, title, image):
+  def createMDIImage(self, title, image, counter=0):
     bare_title = re.sub(r'\(\d+\)\s*', '', title)
     formatted_title = f"({self.counter}) {bare_title}"
-    sub = ImageDisplay(image, formatted_title, self.threadpool)
+    sub = ImageDisplay(image, formatted_title, self.threadpool, counter)
     icon_path = self.ctx.get_resource(SUB_ICON_NAME)
     sub.setWindowIcon(QIcon(icon_path))
     self.counter += 1
@@ -281,7 +281,12 @@ class MainWindow(QMainWindow):
         result_image = op_callback(sub.image_data, param)
       else:
         result_image = op_callback(sub.image_data)
-      self.createMDIImage(title, result_image)
+        
+      if type(result_image) is tuple:
+        result_image, counter = result_image
+        self.createMDIImage(title, result_image, counter)
+      else:
+        self.createMDIImage(title, result_image)
 
   def manageProgressBar(self, progress):
     if not self.progressBar.isVisible():
