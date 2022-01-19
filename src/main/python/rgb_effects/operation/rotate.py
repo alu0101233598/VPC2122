@@ -89,8 +89,5 @@ def apply(input_data, param):
 
   origin = (min(a[0], b[0], c[0], d[0]), min(a[1], b[1], c[1], d[1]))
   end = (max(a[0], b[0], c[0], d[0]), max(a[1], b[1], c[1], d[1]))
-  size_out_image = (round(end[0] - origin[0]), round(end[1] - origin[1]))
-  
-  size_out_image = (round(size_out_image[0]), round(size_out_image[1]))
-  origin = (min(a[0], b[0], c[0], d[0]), min(a[1], b[1], c[1], d[1]))
+  size_out_image = (round(end[0] - origin[0]), round(end[1] - origin[1]))  
   return geometric_transformation.apply(input_data, size_out_image, coordinates_map_it, interpolation_method, origin)
